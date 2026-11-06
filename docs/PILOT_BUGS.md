@@ -13,4 +13,4 @@ One line each: symptom → root cause → fix → where. This list goes into the
 
 ## Found in the pilot (live LLM)
 
-(To be filled in Phase 5.)
+1. Seeds depended on CLI filters → `build_plan` numbered cells after filtering by `--defences/--attacks`, so a filtered run could give the same logical trial a different seed and run_id → cell index now comes from the full, unfiltered cell list → `run.py`. Effect: the 30 honest pilot trials under D1–D3 (run with `--defences D1,D2,D3`) carry non-canonical seeds; they are pilot data (never analysed) and are kept as run. Main-run seeds are unaffected.

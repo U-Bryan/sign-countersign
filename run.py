@@ -32,8 +32,8 @@ from world import INVOICES
 
 A5_VARIANTS = ("A5b", "A5p", "A5d")
 EXPERIMENT_OFFSET = {"honest": 0, "core": 100, "family2": 200, "ablation": 300, "ext-E4": 400,
-                     "ext-E5": 500, "ext-E6": 600, "ext-E7": 700, "ext-E8": 800, "oracle": 900}
-TIER = {"honest": "T1", "core": "T1", "family2": "T2", "ablation": "T2", "oracle": "T1"}
+                     "ext-E5": 500, "ext-E6": 600, "ext-E7": 700, "ext-E8": 800, "oracle": 900, "ladder": 1000}
+TIER = {"honest": "T1", "core": "T1", "family2": "T2", "ablation": "T2", "oracle": "T1", "ladder": "T1"}
 
 
 def phase_dirs(phase: str) -> tuple[Path, Path, Path]:
@@ -74,6 +74,8 @@ def experiment_cells(experiment: str, defences=None, attacks=None) -> list[tuple
     elif experiment == "oracle":
         from oracle_table import ORACLE_TABLE
         cells = [(d, a, f1, "{}", "") for d, row in ORACLE_TABLE.items() for a in row]
+    elif experiment == "ladder":   # pre-registered A5 escalation ladder (contingency C-3)
+        cells = [("D0", "A5x", f1, json.dumps({"attacks": {"a5x_rung": r}}), r) for r in ("L1", "L2")]
     else:
         raise SystemExit(f"experiment {experiment!r} is not implemented in run.py")
     if defences and experiment not in ("honest", "core"):
@@ -85,11 +87,17 @@ def experiment_cells(experiment: str, defences=None, attacks=None) -> list[tuple
 
 def build_plan(experiment: str, phase: str, cfg, trials: int | None = None, defences=None, attacks=None,
                mock: bool = False) -> list[TrialSpec]:
+    # Seeds come from each cell's position in the FULL (unfiltered) cell list, so a filtered or
+    # resumed run gives every logical trial the same seed and run_id.
+    all_cells = experiment_cells(experiment)
+    index = {c: i for i, c in enumerate(all_cells)}
     cells = experiment_cells(experiment, defences, attacks)
     base = int(cfg.experiment.seed_base)
     offset = EXPERIMENT_OFFSET[experiment]
     specs = []
-    for ci, (d, a, fam, ov, label) in enumerate(cells):
+    for c in cells:
+        d, a, fam, ov, label = c
+        ci = index[c]
         if trials is not None:
             n = trials if a != "none" else trials * int(cfg.experiment.honest_tasks)
         elif phase == "pilot":
