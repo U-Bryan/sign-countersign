@@ -178,6 +178,17 @@ def headline(c: Ctx) -> str:
     if c.has("asr.core.D1.A1g.fmt") and c.has("asr.core.D1.A1r.fmt"):
         s += (f"The shared-code handshake reaches {c.v('asr.core.D1.A1g.fmt')} against a guessing outsider, and "
               f"{c.v('asr.core.D1.A1r.fmt')} against one who reflects the code. ")
+    if V.get("asr.core.D2.A5*.k", 1) == 0 and V.get("asr.core.D1.A5*.k", 1) == 0:
+        # Model-level resistance: no injection succeeded, so the "insider" claim rests on A4-lie.
+        s += (f"No prompt injection succeeded against these agents under any defence "
+              f"({c.v('headline.A5pooled.D0')} with no defence, {c.v('headline.A5pooled.D2')} under signatures): the model, "
+              f"not the cryptography, stopped them. ")
+        if c.has("asr.core.D2.A4l.fmt") and c.has("asr.core.D3.A4l.fmt"):
+            s += (f"An insider with a stolen data-source key still diverted payments under per-agent signatures "
+                  f"({c.v('asr.core.D2.A4l.fmt')}); only the external monitor stopped it ({c.v('asr.core.D3.A4l.fmt')})")
+            if c.has("cost.D3.frr_fmt"):
+                s += f", at a cost of {c.v('cost.D3.frr_fmt')} false rejections on honest tasks"
+        return s + "."
     s += (f"A prompt-injected insider still succeeds {c.v('headline.A5pooled.D1')} (D1) and {c.v('headline.A5pooled.D2')} (D2) "
           f"of the time under the cryptographic defences. ")
     if V.get("verdict.H6") == "supported":

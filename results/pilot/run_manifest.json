@@ -1,7 +1,7 @@
 {
  "phase": "pilot",
  "first_trial_end": "2026-11-06T18:57:44+00:00",
- "last_trial_end": "2026-11-06T19:13:04+00:00",
+ "last_trial_end": "2026-11-06T19:38:09+00:00",
  "python": "3.13.15",
  "os": "Windows 11 (10.0.26200)",
  "cpu": "Intel64 Family 6 Model 197 Stepping 2, GenuineIntel",
@@ -17,7 +17,7 @@
   "statsmodels": "0.15.0",
   "numpy": "2.5.4"
  },
- "git_sha": "1a33581734b48fe99277e3975ff75904b6a10868",
+ "git_sha": "459bc7ca3490d13c78cfe1555f72f2148cb7ebec",
  "config_sha": "ba1c174564978c425a46c9c7ba2406c4983221ec92ed84f8b87a0dc70926d1c4",
  "prompt_sha": "35b2e5c8cf18fffb598a78f847bf67ff20355bb0fa62fedc3d8239080da3a420",
  "models_requested": {
@@ -43,14 +43,16 @@
   }
  },
  "models_returned": [
-  "claude-haiku-5-5"
+  "claude-haiku-5-5",
+  "gpt-5-mini-2025-08-07"
  ],
- "trials": 210,
- "trials_ok": 210,
+ "trials": 296,
+ "trials_ok": 296,
  "trials_error": 0,
- "spend_usd": 0.197657,
+ "spend_usd": 0.441511,
  "experiments": [
   "core",
+  "family2",
   "honest",
   "ladder"
  ]

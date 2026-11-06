@@ -16,7 +16,7 @@ Current phase: 4 (live part blocked) | Next step: install git -> git init + firs
 | 8 Report + handoff | READY (rehearsed on mock data) | | | make_report.py, reproduce.py, README.md written |
 
 ## Checkpoints
-C1 keys: DONE for family 1 (Anthropic key works); family 2 deferred: OpenAI key valid but account has no credits (429 insufficient quota) · C2 GitHub: waiting (git and gh not installed) · C3 tiers approved: - · C4: - · C5 inputs: - · C6 publish: -
+C1 keys: DONE for family 1 (Anthropic key works); family 2 deferred: OpenAI key valid but account has no credits (429 insufficient quota) · C2 GitHub: local repo created (git installed via winget 2026-11-06); no remote yet · C3 tiers approved: T1, T2 (ablations now; family2 when the human adds OpenAI credits), T3 E4, E5, E6 (2026-11-06) · C4: - · C5 inputs: - · C6 publish: -
 
 Family 2 deferred (OpenAI account has no credits; gpt-5-mini is listed and will be used once credits are added).
 
@@ -29,6 +29,8 @@ Family 2 deferred (OpenAI account has no credits; gpt-5-mini is listed and will 
 ## Background runs
 | Started | Command | Output file | Status |
 | --- | --- | --- | --- |
+| 2026-11-06 19:24 local (PID 1632) | `scripts\run_main.py honest core ablation ext-E4 ext-E5 ext-E6` | results\run_main.out / .err, results\progress.log | RUNNING (~2,250 trials, ~2 h). Resume after interruption: rerun the same command (completed trials are skipped). |
+| pending | `scripts\run_main.py family2` | | waits for OpenAI credits, then: check_models.py, family-2 honest pilot (gate 2), then this |
 
 ## Live results so far (pilot phase, family 1, results/pilot/)
 - Honest pilot: 40 trials (10 tasks x D0-D3): 40/40 completed correctly, 0 false rejections, 0 parse failures, 0 refusals, $0.0303 total, median ~9 s per task.

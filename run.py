@@ -151,14 +151,19 @@ def load_trials(trials_dir: Path) -> dict[str, dict]:
 
 
 def append_csv(csv_path: Path, rec: dict) -> None:
+    """Live view only. The trial JSONs are the source of truth and the CSV is rebuilt from them
+    at the end of every run, so a failed append (another process holding the file) is harmless."""
     with _csv_lock:
-        new = not csv_path.exists()
-        csv_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(csv_path, "a", encoding="utf-8", newline="") as fh:
-            w = csv.DictWriter(fh, fieldnames=CSV_COLUMNS, extrasaction="ignore")
-            if new:
-                w.writeheader()
-            w.writerow(rec)
+        try:
+            new = not csv_path.exists()
+            csv_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(csv_path, "a", encoding="utf-8", newline="") as fh:
+                w = csv.DictWriter(fh, fieldnames=CSV_COLUMNS, extrasaction="ignore")
+                if new:
+                    w.writeheader()
+                w.writerow(rec)
+        except OSError:
+            progress(f"csv append skipped for {rec.get('run_id')} (file busy; CSV is rebuilt at the end)")
 
 
 def rebuild_csv(phase: str) -> int:
@@ -170,7 +175,14 @@ def rebuild_csv(phase: str) -> int:
         w = csv.DictWriter(fh, fieldnames=CSV_COLUMNS, extrasaction="ignore")
         w.writeheader()
         w.writerows(recs)
-    os.replace(tmp, csv_path)
+    for attempt in range(40):   # another process may be appending at this instant (Windows file locking)
+        try:
+            os.replace(tmp, csv_path)
+            break
+        except PermissionError:
+            time.sleep(0.25)
+    else:
+        raise PermissionError(f"could not replace {csv_path}; rerun: python run.py --rebuild-csv")
     return len(recs)
 
 
