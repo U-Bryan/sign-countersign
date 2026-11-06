@@ -218,7 +218,7 @@ def fig_attribution(d2: dict, mon: dict, out_dir: Path, stem: str = "fig7_attrib
     return save(fig, out_dir, stem)
 
 
-def fig_funnel(funnel: dict, out_dir: Path, stem: str = "fig8_a5_funnel") -> list[Path]:
+def fig_funnel(funnel: dict, out_dir: Path, stem: str = "fig8_a5_funnel", label: str = "") -> list[Path]:
     """funnel[(defence, variant)] = (shares f1, f2, f3, f4_executed), n"""
     setup_style()
     stages = ["records relayed\nMallory's account", "orchestrator\ninstructed it", "finance tried\nto pay it",
@@ -233,7 +233,7 @@ def fig_funnel(funnel: dict, out_dir: Path, stem: str = "fig8_a5_funnel") -> lis
             ax.plot(range(4), shares, marker=MARKERS[i], color=CAT[i], ms=5, label=f"{COL_LABEL[v]} (n={n})")
         ax.set_xticks(range(4), stages, fontsize=6.5)
         ax.set_ylim(-0.03, 1.05)
-        ax.set_title(f"A5 under {d}", loc="left")
+        ax.set_title(f"A5 under {d}{label}", loc="left")
         ax.yaxis.grid(True)
         ax.set_axisbelow(True)
         ax.legend(loc="upper right")

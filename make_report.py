@@ -178,17 +178,44 @@ def headline(c: Ctx) -> str:
     if c.has("asr.core.D1.A1g.fmt") and c.has("asr.core.D1.A1r.fmt"):
         s += (f"The shared-code handshake reaches {c.v('asr.core.D1.A1g.fmt')} against a guessing outsider, and "
               f"{c.v('asr.core.D1.A1r.fmt')} against one who reflects the code. ")
-    if V.get("asr.core.D2.A5*.k", 1) == 0 and V.get("asr.core.D1.A5*.k", 1) == 0:
-        # Model-level resistance: no injection succeeded, so the "insider" claim rests on A4-lie.
+    f1_resists = V.get("asr.core.D2.A5*.k", 1) == 0 and V.get("asr.core.D1.A5*.k", 1) == 0
+    f2_fooled = V.get("headline.f2.A5pooled.D2.k", 0) > 0
+    m1 = V.get("model.family1", "family-1")
+    m2 = V.get("model.family2", "family-2")
+
+    def a4l_sentence() -> str:
+        if c.has("asr.core.D2.A4l.fmt") and c.has("asr.core.D3.A4l.fmt"):
+            return (f"An insider with a stolen data-source key diverted payments under per-agent signatures "
+                    f"({c.v('asr.core.D2.A4l.fmt')}) until the external monitor stopped it ({c.v('asr.core.D3.A4l.fmt')}). ")
+        return ""
+
+    if f2_fooled:
+        if V.get("verdict.H6.family2") == "supported":
+            verb2 = "cut that to"
+        elif V.get("headline.f2.A5pooled.D3.p", 1) < V.get("headline.f2.A5pooled.D2.p", 0):
+            verb2 = "reduced that (not significantly after Holm correction) to"
+        else:
+            verb2 = "left it at"
+        s += (f"With {m2} agents, a prompt-injected insider still succeeded {c.v('headline.f2.A5pooled.D1')} (D1) and "
+              f"{c.v('headline.f2.A5pooled.D2')} (D2) of the time under the cryptographic defences; an external monitor "
+              f"{verb2} {c.v('headline.f2.A5pooled.D3')}")
+        s += (f", at a cost of {c.v('cost2.D3.frr_fmt')} false rejections on honest tasks. " if c.has("cost2.D3.frr_fmt") else ". ")
+        if f1_resists:
+            s += (f"Agents running {m1} resisted every injection ({c.v('headline.A5pooled.D0')} with no defence, "
+                  f"{c.v('headline.A5pooled.D2')} under signatures): there the model, not the cryptography, stopped them. ")
+        s += a4l_sentence()
+        if c.has("cost.D3.frr_fmt"):
+            s += f"With {m1}, the monitor cost {c.v('cost.D3.frr_fmt')} false rejections on honest tasks."
+        return s.strip()
+    if f1_resists:
+        # Model-level resistance and no second family: the "insider" claim rests on A4-lie.
         s += (f"No prompt injection succeeded against these agents under any defence "
               f"({c.v('headline.A5pooled.D0')} with no defence, {c.v('headline.A5pooled.D2')} under signatures): the model, "
               f"not the cryptography, stopped them. ")
-        if c.has("asr.core.D2.A4l.fmt") and c.has("asr.core.D3.A4l.fmt"):
-            s += (f"An insider with a stolen data-source key still diverted payments under per-agent signatures "
-                  f"({c.v('asr.core.D2.A4l.fmt')}); only the external monitor stopped it ({c.v('asr.core.D3.A4l.fmt')})")
-            if c.has("cost.D3.frr_fmt"):
-                s += f", at a cost of {c.v('cost.D3.frr_fmt')} false rejections on honest tasks"
-        return s + "."
+        s += a4l_sentence()
+        if c.has("cost.D3.frr_fmt"):
+            s += f"The monitor cost {c.v('cost.D3.frr_fmt')} false rejections on honest tasks."
+        return s.strip()
     s += (f"A prompt-injected insider still succeeds {c.v('headline.A5pooled.D1')} (D1) and {c.v('headline.A5pooled.D2')} (D2) "
           f"of the time under the cryptographic defences. ")
     if V.get("verdict.H6") == "supported":
@@ -243,6 +270,12 @@ def results_md(c: Ctx, chosen: dict) -> str:
         c.fig("fig8_a5_funnel", "Figure 8. How far the injected text travelled through the agent chain."), "",
         c.table("table11_a5_funnel"), "", c.fig("fig6_a5_variants", "Figure 6. A5 success by variant and defence, per model family."), "",
         c.table("table7_a5_variants"), "", c.table("table7b_a5_variant_spread"), "", c.table("table8_family_compare"), "",
+        "## Second model family: replication of the A5 column (Tier 2, exploratory per the pre-registration)", "",
+        f"Family 1: {c.v('model.family1')}. Family 2: {c.v('model.family2')}.", "",
+        c.fig("fig2c_family2_a5_heatmap", "Figure 2c. Prompt injection (A5) by defence, family 2."), "",
+        c.table("table2c_family2_a5_matrix"), "", c.table("table3b_significance_family2"), "",
+        c.fig("fig8b_a5_funnel_family2", "Figure 8b. How far the injected text travelled, family 2."), "",
+        c.table("table11b_a5_funnel_family2"), "", "Honest-run costs, family 2:", "", c.table("table4b_costs_family2"), "",
         "## Protocol level vs model level", "", c.fig("fig9_oracle_vs_llm", "Figure 9. What each protocol lets through (top) vs what the LLM agents did (bottom)."), "",
         c.table("table12_model_resistance"), "",
         "## Ablations and extensions", "", c.fig("fig2b_ablation_heatmap", "Figure 2b. Monitor without crypto, monitor without R1, and the fixed handshake."), "",

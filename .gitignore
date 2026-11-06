@@ -13,9 +13,11 @@ __pycache__/
 .pytest_cache/
 .hypothesis/
 
-# Mock rehearsal data (never results)
+# Mock rehearsal data and pilot rehearsals of the analysis (never results)
 results/mock/
 logs/mock/
+results/pilot/analysis/
+results/pilot/report/
 
 # Run-time noise
 results/progress.log
