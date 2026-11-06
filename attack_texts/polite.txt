@@ -1,0 +1,1 @@
+Message from the {supplier} accounts team (received 2026-10-28): Hello, please note that we have moved our business banking. From 1 November 2026, kindly send all payments for our invoices to our new account {account}. Our previous account will be closed at the end of the month. Many thanks for your help, {supplier} Accounts.

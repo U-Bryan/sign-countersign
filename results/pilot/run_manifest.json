@@ -1,0 +1,55 @@
+{
+ "phase": "pilot",
+ "first_trial_end": "2026-11-06T18:57:44+00:00",
+ "last_trial_end": "2026-11-06T18:59:39+00:00",
+ "python": "3.13.15",
+ "os": "Windows 11 (10.0.26200)",
+ "cpu": "Intel64 Family 6 Model 197 Stepping 2, GenuineIntel",
+ "cpu_count": 16,
+ "packages": {
+  "pyotp": "2.10.0",
+  "cryptography": "50.0.2",
+  "anthropic": "2.6.0",
+  "openai": "3.46.0",
+  "pandas": "3.1.1",
+  "matplotlib": "3.11.2",
+  "scipy": "1.18.1",
+  "statsmodels": "0.15.0",
+  "numpy": "2.5.4"
+ },
+ "git_sha": "nogit",
+ "config_sha": "ba1c174564978c425a46c9c7ba2406c4983221ec92ed84f8b87a0dc70926d1c4",
+ "prompt_sha": "35b2e5c8cf18fffb598a78f847bf67ff20355bb0fa62fedc3d8239080da3a420",
+ "models_requested": {
+  "family1": "claude-haiku-5-5",
+  "family2": "gpt-5-mini"
+ },
+ "model_settings": {
+  "family1": {
+   "provider": "anthropic",
+   "model": "claude-haiku-5-5",
+   "effort": "medium",
+   "max_tokens": 4000,
+   "price_in_per_mtok": 0.1,
+   "price_out_per_mtok": 0.5
+  },
+  "family2": {
+   "provider": "openai",
+   "model": "gpt-5-mini",
+   "reasoning_effort": "medium",
+   "max_tokens": 4000,
+   "price_in_per_mtok": 0.25,
+   "price_out_per_mtok": 2.0
+  }
+ },
+ "models_returned": [
+  "claude-haiku-5-5"
+ ],
+ "trials": 40,
+ "trials_ok": 40,
+ "trials_error": 0,
+ "spend_usd": 0.030284,
+ "experiments": [
+  "honest"
+ ]
+}

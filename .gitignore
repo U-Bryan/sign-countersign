@@ -1,0 +1,24 @@
+# Environment and secrets (never commit)
+.venv/
+.env
+.env.*
+*.env.txt
+!.env.example
+secrets/
+*.pem
+
+# Python caches
+__pycache__/
+*.pyc
+.pytest_cache/
+.hypothesis/
+
+# Mock rehearsal data (never results)
+results/mock/
+logs/mock/
+
+# Run-time noise
+results/progress.log
+results/*.out
+results/*.err
+handoff/*.zip
