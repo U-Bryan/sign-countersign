@@ -1,19 +1,19 @@
 # PROGRESS: Sign and Countersign
 
 Last updated: 2026-11-06 by Claude Code
-Current phase: 4 (live part blocked) | Next step: install git -> git init + first commit -> tag prompts-v1 and prereg-v1 -> Phase 4 live D0 attack check -> Phase 5 pilot | Blocked on: Git not installed (prereg-v1 must be tagged before any live attack trial)
+Current phase: 8 (report built; waiting for human inputs) | Next step: C5 inputs (authors, affiliation, sprint dates, motivation, papers, leave-outs) -> fill report/paper_draft.md -> C6 (GitHub remote + make public) -> tag submission | Blocked on: C5, C6
 
 | Phase | Status (TODO / IN PROGRESS / DONE) | Gate result | Commit / tag | Notes |
 | --- | --- | --- | --- | --- |
-| 0 Setup | IN PROGRESS | FAIL only on git (not installed) | - | venv Python 3.13.15, packages pinned, skeleton, config, secret scan PASS; model check family1 OK (claude-haiku-5-5); family 2 deferred |
-| 1 World, bus | DONE | PASS (gates.py 1) | - (no git yet) | 198 unit tests at the time of the gate |
-| 2 Agents | IN PROGRESS | live honest D0 10/10 PASS; parse failures 0/240 calls; FAIL only on tag prompts-v1 (git) | - | prompts unchanged since written (prompts/*.txt); tag as soon as git exists |
-| 3 Defences | DONE | PASS (gates.py 3): live honest D1 10/10, D2 10/10, D3 10/10, zero false rejections | - | D1, D1fix, D2, D3, D0+M, -R1 built; bench.csv written |
-| 4 Attacks + prereg | IN PROGRESS | offline parts PASS | - | attacks + capabilities + oracle matrix all PASS; PREREGISTRATION.md written, must be committed + tagged prereg-v1 BEFORE any live attack trial |
-| 5 Pilot | TODO | | | runner, audit, cost estimator ready |
-| 6 Main runs | TODO | | | |
-| 7 Analysis | READY (rehearsed on mock data) | | | analyse.py + figs.py + determinism check work end to end on mock data |
-| 8 Report + handoff | READY (rehearsed on mock data) | | | make_report.py, reproduce.py, README.md written |
+| 0 Setup | DONE | git installed; model check both families OK | 1a33581 | venv Python 3.13.15, packages pinned; secret scan PASS |
+| 1 World, bus | DONE | PASS | 1a33581 | |
+| 2 Agents | DONE | live honest D0 10/10 (family 1) and 10/10 (family 2); parse failures 0 | tag prompts-v1 | |
+| 3 Defences | DONE | PASS: live honest D1-D3 10/10 each, zero false rejections | 1a33581 | |
+| 4 Attacks + prereg | DONE | attacks succeed under D0 except A5 (C-3 followed: 0/59 incl. ladder) | tag prereg-v1 (before any live attack trial) | |
+| 5 Pilot | DONE | 210 + 76 pilot trials, audit 100%, logs read (docs/PILOT_AUDIT.md), cost estimate, C3 approved | 459bc7c, f06c3d3 | |
+| 6 Main runs | DONE | PASS (gates.py 6): 2,730 trials, 0 errors, audit 100% | 296c15a, tag main-run-complete | total API spend $4.01 (all phases) |
+| 7 Analysis | DONE | PASS (gates.py 7): deterministic, all figures checked by eye | b29e7e8 | 27 tables, 16 figures |
+| 8 Report + handoff | IN PROGRESS | final QA: fresh clone `reproduce.py` exit 0, all 30 tables + values.json byte-identical; no [MISSING]; secret scan PASS; prereg and prompts unchanged since tags; handoff complete except C5 items | b29e7e8 | waiting for C5 (author details) and C6 (GitHub) |
 
 ## Checkpoints
 C1 keys: DONE for family 1 (Anthropic key works); family 2 deferred: OpenAI key valid but account has no credits (429 insufficient quota) · C2 GitHub: local repo created (git installed via winget 2026-11-06); no remote yet · C3 tiers approved: T1, T2 (ablations now; family2 when the human adds OpenAI credits), T3 E4, E5, E6 (2026-11-06) · C4: - · C5 inputs: - · C6 publish: -
@@ -29,8 +29,8 @@ Family 2 enabled 2026-11-06 after the human added OpenAI credits (model check OK
 ## Background runs
 | Started | Command | Output file | Status |
 | --- | --- | --- | --- |
-| 2026-11-06 19:24 local (PID 1632) | `scripts\run_main.py honest core ablation ext-E4 ext-E5 ext-E6` | results\run_main.out / .err, results\progress.log | RUNNING (~2,250 trials, ~2 h). Resume after interruption: rerun the same command (completed trials are skipped). |
-| 2026-11-06 ~19:45 local (PID 36492) | `scripts\run_main.py family2` | results\run_family2.out / .err, results\progress.log | RUNNING (480 trials). Credits added by the human; model check OK (gpt-5-mini-2025-08-07); family-2 honest pilot D0 10/10; family-2 pilot: A5 3/3 per variant under D0, D1, D2 and 0/3 under D3 (blocked by R1); honest 10/10 under every defence |
+| 2026-11-06 19:24 local (PID 1632) | `scripts\run_main.py honest core ablation ext-E4 ext-E5 ext-E6` | results\run_main.out / .err, results\progress.log | DONE 21:18, 2,250 trials, 0 errors |
+| 2026-11-06 ~19:45 local (PID 36492) | `scripts\run_main.py family2` | results\run_family2.out / .err, results\progress.log | DONE 20:19, 480 trials, 0 errors. Credits added by the human; model check OK (gpt-5-mini-2025-08-07); family-2 honest pilot D0 10/10; family-2 pilot: A5 3/3 per variant under D0, D1, D2 and 0/3 under D3 (blocked by R1); honest 10/10 under every defence |
 
 ## Live results so far (pilot phase, family 1, results/pilot/)
 - Honest pilot: 40 trials (10 tasks x D0-D3): 40/40 completed correctly, 0 false rejections, 0 parse failures, 0 refusals, $0.0303 total, median ~9 s per task.
