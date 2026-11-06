@@ -424,7 +424,8 @@ def analyse(df_all: pd.DataFrame, phase: str, out_root: Path, cfg, make_figures:
                             "tokens": r["tokens_per_task_median"]})
             figs.fig_cost_tradeoff(pts, figdir)
         if fam_cells:
-            figs.fig_a5_variants(fam_cells, list(fam_cells), figdir)
+            labels = {f: f"{f.replace('family', 'family ')}: {V.get(f'model.{f}', f)}" for f in fam_cells}
+            figs.fig_a5_variants(fam_cells, list(fam_cells), figdir, labels=labels)
         if d2_fig or mon_fig:
             figs.fig_attribution(d2_fig, mon_fig, figdir)
         if mon_fig_m:

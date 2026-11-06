@@ -1,0 +1,31 @@
+{
+  "agents": {
+    "orchestrator": {
+      "public_key_b64": "jmVC/q4xZ1vBiK+EYxfXU308q5ssVEumJNs8w9MtyJ8=",
+      "may_send": {
+        "records": [
+          "get_bank_details"
+        ],
+        "finance": [
+          "pay_invoice"
+        ]
+      }
+    },
+    "records": {
+      "public_key_b64": "yfMnGWCeVl3z/tHW8aH4/gnNHVM/0ckcDzlSjuJ7y3I=",
+      "may_send": {
+        "orchestrator": [
+          "bank_details"
+        ]
+      }
+    },
+    "finance": {
+      "public_key_b64": "aiaf5YMki/Z/BOvg7hTc0Kkc5nim1U7GruWjNgjWlFQ=",
+      "may_send": {
+        "orchestrator": [
+          "payment_result"
+        ]
+      }
+    }
+  }
+}

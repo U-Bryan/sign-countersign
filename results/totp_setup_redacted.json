@@ -1,0 +1,9 @@
+{
+  "digits": 6,
+  "period_s": 30,
+  "valid_window": 1,
+  "algorithm": "HMAC-SHA1 (pyotp default)",
+  "channel_ttl_s": 120,
+  "secret": "[REDACTED: a fresh pyotp.random_base32() per trial, held in memory only, never stored]",
+  "note": "registry_example.json holds example public keys only; real keys are regenerated per trial."
+}

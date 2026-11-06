@@ -1,0 +1,25 @@
+\begin{tabular}{lll}
+\toprule
+defence / scope & parameter & setting \\
+\midrule
+All & Models & family 1 claude-haiku-5-5 (effort medium, max\_tokens 4000); family 2 gpt-5-mini (reasoning\_effort medium) \\
+All & Sampling & provider defaults; no temperature/top\_p/top\_k sent (deviation V1) \\
+All & Trials & 30 per attack cell; honest 10 tasks x 3 reps per defence \\
+All & Seeds & seed\_base 20261106 + 1000 x (experiment offset + cell index) + trial \\
+All & Attacker account & GB-KSTR-417 (E5: GB-MALLORY-666) \\
+D0 & Identity & claimed sender field trusted \\
+D1 & TOTP & 6 digits, 30 s period, valid\_window 1 (accepts previous/current/next code) \\
+D1 & Handshake & HELLO + nonce; receiver reveals code first; caller checks it and sends its code; nonces not bound; no replay cache \\
+D1 & Channel & bound to (claimed caller, nonce); closes at task end or after 120 s; no per-message integrity \\
+D1fix & Codes & receiver code from HMAC(secret,'sign'); caller code from HMAC(secret,'countersign') \\
+D2 & Keys & Ed25519 per agent, fresh per trial; registry of public keys + may\_send table \\
+D2 & Signature & covers msg\_id, sender, recipient, timestamp, task, body, alg, nonce, ts\_ms \\
+D2 & Checks & K1 known sender; K2 signature; K3 recipient; K4 fresh nonce (16 bytes, cache TTL 600 s); K5 timestamp within 60 s; K6 authorised kind \\
+D3 & Monitor & rule-based, between finance and send\_payment; checks the world, not agent claims; all rules run, first failure reported \\
+D3 & Rules in order & R1 account equals the invoice's account on file; R2 0 < amount <= invoice amount; R3 invoice not already paid; R4 provenance: monitor re-verifies the trigger signature, signer is orchestrator, task registered and names this invoice, request matches trigger \\
+D0+M & Monitor only & D0 transport + monitor; R4 in header-trust mode (no signature to verify) \\
+D3-R1 / D0+M-R1 & Ablation & as D3 / D0+M with R1 switched off \\
+A2 & Replay delays & fast +10 s, slow +300 s (simulated clock) \\
+A1 & Guess attempts & 1 per trial \\
+\bottomrule
+\end{tabular}

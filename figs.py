@@ -145,50 +145,73 @@ def fig_forest(cells: dict, rows: list[str], out_dir: Path, stem: str = "fig4_as
 
 
 def fig_cost_tradeoff(points: list[dict], out_dir: Path, stem: str = "fig5_cost_tradeoff") -> list[Path]:
+    """Small multiples (one measure per panel, each with its own axis): protection vs the three costs."""
     setup_style()
-    fig, ax = plt.subplots(figsize=(3.6, 2.8))
-    for p in points:
-        colour, marker = DEF_STYLE[p["defence"]]
-        ax.errorbar([p["mean_asr"]], [p["frr"]], yerr=[[p["frr"] - p["frr_lo"]], [p["frr_hi"] - p["frr"]]],
-                    fmt=marker, color=colour, ms=7, elinewidth=1.2, capsize=0, markeredgecolor=SURFACE,
-                    markeredgewidth=0.8)
-        ax.annotate(f"{p['defence']}\n{p['ms_per_msg']:.2f} ms/msg, {p['tokens']:.0f} tok/task",
-                    (p["mean_asr"], p["frr"]), xytext=(6, 4), textcoords="offset points", fontsize=6.5, color=INK)
-    ax.set_xlabel("mean attack success rate over the 10 attack columns")
-    ax.set_ylabel("false-rejection rate on honest tasks")
-    ax.set_xlim(-0.03, 1.05)
-    top = max([p["frr_hi"] for p in points] + [0.1])
-    ax.set_ylim(-0.01, min(1.0, top * 1.25))
-    ax.yaxis.grid(True)
-    ax.set_axisbelow(True)
+    panels = [("mean_asr", "Mean attack success\n(10 attack columns)", "{:.0%}", (0, 1.08)),
+              ("frr", "False rejections on honest\ntasks (95% Wilson interval)", "{:.0%}", None),
+              ("ms_per_msg", "Added processing per\nmessage (median, ms)", "{:.2f}", None),
+              ("tokens", "LLM tokens per honest\ntask (median)", "{:,.0f}", None)]
+    fig, axes = plt.subplots(1, 4, figsize=(7.0, 2.3))
+    names = [p["defence"] for p in points]
+    for ax, (key, title, fmt, ylim) in zip(axes, panels):
+        vals = [p[key] for p in points]
+        colours = [DEF_STYLE[d][0] for d in names]
+        if key == "frr":
+            for i, p in enumerate(points):
+                colour, marker = DEF_STYLE[p["defence"]]
+                ax.errorbar([i], [p["frr"]], yerr=[[p["frr"] - p["frr_lo"]], [p["frr_hi"] - p["frr"]]], fmt=marker,
+                            color=colour, ms=6, elinewidth=1.2, capsize=0, markeredgecolor=SURFACE)
+                ax.annotate(fmt.format(p["frr"]), (i, p["frr"]), xytext=(5, -2), textcoords="offset points",
+                            fontsize=6.5, color=INK)
+            ax.set_ylim(-0.02, max(0.15, max(p["frr_hi"] for p in points) * 1.15))
+        else:
+            ax.bar(range(len(vals)), vals, 0.6, color=colours, edgecolor=SURFACE, linewidth=1)
+            top = max(vals) if vals else 1
+            for i, v in enumerate(vals):
+                ax.annotate(fmt.format(v), (i, v), xytext=(0, 2), textcoords="offset points", ha="center",
+                            fontsize=6.3, color=INK)
+            ax.set_ylim(*(ylim or (0, top * 1.22 if top > 0 else 1)))
+        ax.set_xticks(range(len(names)), names)
+        ax.set_title(title, loc="left", fontsize=7.5)
+        ax.yaxis.grid(True)
+        ax.set_axisbelow(True)
+        ax.tick_params(axis="y", labelsize=6.5)
+    fig.tight_layout(w_pad=1.2)
     return save(fig, out_dir, stem)
 
 
-def fig_a5_variants(data: dict, families: list[str], out_dir: Path, stem: str = "fig6_a5_variants") -> list[Path]:
+def fig_a5_variants(data: dict, families: list[str], out_dir: Path, stem: str = "fig6_a5_variants",
+                    labels: dict | None = None) -> list[Path]:
     setup_style()
     variants = ["A5b", "A5p", "A5d"]
     defs = ["D0", "D1", "D2", "D3"]
-    fig, axes = plt.subplots(1, len(families), figsize=(3.4 * len(families), 2.4), sharey=True, squeeze=False)
+    fig, axes = plt.subplots(1, len(families), figsize=(3.4 * len(families), 2.5), sharey=True, squeeze=False)
     for ax, fam in zip(axes[0], families):
         width = 0.18
         for i, d in enumerate(defs):
             colour, marker = DEF_STYLE[d]
             xs = np.arange(len(variants)) + (i - 1.5) * (width + 0.02)
-            vals, lo, hi = [], [], []
+            vals, lo, hi, ks = [], [], [], []
             for v in variants:
                 k, n = data.get(fam, {}).get((d, v), (0, 0))
                 p = k / n if n else 0
                 a, b = wilson(k, n) if n else (0, 0)
-                vals.append(p), lo.append(p - a), hi.append(b - p)
+                vals.append(p), lo.append(p - a), hi.append(b - p), ks.append((k, n))
             ax.bar(xs, vals, width, color=colour, label=d, edgecolor=SURFACE, linewidth=0.8)
             ax.errorbar(xs, vals, yerr=[lo, hi], fmt="none", ecolor=INK2, elinewidth=0.8, capsize=0)
+            # Marker at every value, so a zero-height bar is still visible (and identity is not colour alone).
+            ax.scatter(xs, vals, marker=marker, s=14, color=colour, edgecolor=SURFACE, linewidth=0.5, zorder=3)
+            for x, p, h, (k, n) in zip(xs, vals, hi, ks):
+                if n:
+                    ax.annotate(f"{k}", (x, p + h), xytext=(0, 1.5), textcoords="offset points", ha="center",
+                                fontsize=5.6, color=INK2)
         ax.set_xticks(range(len(variants)), [COL_LABEL[v] for v in variants])
-        ax.set_title(fam, loc="left")
-        ax.set_ylim(0, 1.05)
+        ax.set_title((labels or {}).get(fam, fam), loc="left", fontsize=7.5)
+        ax.set_ylim(0, 1.12)
         ax.yaxis.grid(True)
         ax.set_axisbelow(True)
-    axes[0][0].set_ylabel("attack success rate")
-    axes[0][0].legend(ncol=4, loc="lower left", bbox_to_anchor=(0, 1.08))
+    axes[0][0].set_ylabel("attack success rate\n(successes of 30 above each bar)")
+    axes[0][0].legend(ncol=4, loc="lower left", bbox_to_anchor=(0, 1.12))
     return save(fig, out_dir, stem)
 
 
@@ -230,13 +253,15 @@ def fig_funnel(funnel: dict, out_dir: Path, stem: str = "fig8_a5_funnel", label:
             if (d, v) not in funnel:
                 continue
             shares, n = funnel[(d, v)]
-            ax.plot(range(4), shares, marker=MARKERS[i], color=CAT[i], ms=5, label=f"{COL_LABEL[v]} (n={n})")
+            # Nested widths and sizes (thick to thin): identical series stay visible without moving any value.
+            ax.plot(range(4), shares, marker=MARKERS[i], color=CAT[i], lw=3.2 - 1.0 * i, ms=8 - 2 * i,
+                    label=f"{COL_LABEL[v]} (n={n})", zorder=2 + i)
         ax.set_xticks(range(4), stages, fontsize=6.5)
-        ax.set_ylim(-0.03, 1.05)
+        ax.set_ylim(-0.05, 1.08)
         ax.set_title(f"A5 under {d}{label}", loc="left")
         ax.yaxis.grid(True)
         ax.set_axisbelow(True)
-        ax.legend(loc="upper right")
+        ax.legend(loc="lower left", fontsize=6.5)
     axes[0][0].set_ylabel("share of trials")
     return save(fig, out_dir, stem)
 

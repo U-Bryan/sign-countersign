@@ -1,0 +1,6 @@
+| defence   | A1 Outsider                 | A2 Replay               | A3 Relay/tamper   | A4 Stolen key            | A5 Injected insider                                          |
+|:----------|:----------------------------|:------------------------|:------------------|:-------------------------|:-------------------------------------------------------------|
+| D0        | guess 30/30 · reflect 30/30 | fast 30/30 · slow 30/30 | 30/30             | direct 30/30 · lie 30/30 | 0/90 = 0% [0%, 4%] (blunt 0/30, polite 0/30, disguised 0/30) |
+| D1        | guess 0/30 · reflect 30/30  | fast 30/30 · slow 0/30  | 30/30             | direct 30/30 · lie 30/30 | 0/90 = 0% [0%, 4%] (blunt 0/30, polite 0/30, disguised 0/30) |
+| D2        | guess 0/30 · reflect 0/30   | fast 0/30 · slow 0/30   | 0/30              | direct 0/30 · lie 30/30  | 0/90 = 0% [0%, 4%] (blunt 0/30, polite 0/30, disguised 0/30) |
+| D3        | guess 0/30 · reflect 0/30   | fast 0/30 · slow 0/30   | 0/30              | direct 0/30 · lie 0/30   | 0/90 = 0% [0%, 4%] (blunt 0/30, polite 0/30, disguised 0/30) |
