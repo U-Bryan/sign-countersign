@@ -2,7 +2,7 @@
 
 _Generated skeleton: `make_report.py` overwrites this file on every run. Write the final paper in `report/PAPER.md`; the instructions are in `REPORT_BRIEF.md`._
 
-Bryan Uzoatu · PhD Researcher in Cyber Security, University of Bristol · Swarm Alignment Sprint, Track 3 (Strengthening Agent Infrastructure), [TO FILL: sprint dates]
+Ifeanyi Bryan Uzoatu · PhD Researcher in Cyber Security, University of Bristol · Apart Research Swarm Alignment Sprint, November 2026 · Track 3: Strengthening Agent Infrastructure
 
 ## Abstract (write last; claim no more than Table 10 supports)
 

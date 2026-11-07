@@ -23,7 +23,7 @@ from pathlib import Path
 
 from config import ROOT, load_config
 
-AUTHOR = "Bryan Uzoatu"
+AUTHOR = "Ifeanyi Bryan Uzoatu"
 AFFILIATION = "PhD Researcher in Cyber Security, University of Bristol"
 
 
@@ -358,7 +358,7 @@ def paper_md(c: Ctx) -> str:
 
 _Generated skeleton: `make_report.py` overwrites this file on every run. Write the final paper in `report/PAPER.md`; the instructions are in `REPORT_BRIEF.md`._
 
-{AUTHOR} · {AFFILIATION} · Swarm Alignment Sprint, Track 3 (Strengthening Agent Infrastructure), [TO FILL: sprint dates]
+{AUTHOR} · {AFFILIATION} · Apart Research Swarm Alignment Sprint, November 2026 · Track 3: Strengthening Agent Infrastructure
 
 ## Abstract (write last; claim no more than Table 10 supports)
 
@@ -410,49 +410,59 @@ def checklist_md(c: Ctx) -> str:
     if c.has("headline.f2.A5pooled.D2"):
         item7.append(("A5 pooled, family 2, D2 → D3", "headline.f2.A5pooled.D2", "headline.f2.A5pooled.D3"))
     item7.append(("A5 pooled, family 1, D2 → D3 (the model resisted)", "headline.A5pooled.D2", "headline.A5pooled.D3"))
-    # The A2A column was checked against the A2A specification v1.0.0 (https://a2a-protocol.org/latest/specification/,
-    # read 2026-11-07). Section numbers refer to that version.
+    # The A2A column was checked against the A2A specification v1.0.0 (https://a2a-protocol.org/v1.0.0/specification/),
+    # sections 3.3.1, 4.1.4, 4.5, 5.6.1, 7.1-7.6.4, 8.4, 13.1-13.4 and 14.1.1, read on 2026-11-07.
     items = [
         ("Give each agent its own key; never share one secret across agents.", "A4-direct: D1 vs D2",
          [("", "asr.core.D1.A4d.fmt", "asr.core.D2.A4d.fmt")],
-         "Supported: each agent declares its own authentication in its Agent Card (`securitySchemes`, `security`; "
-         "API key, HTTP auth, OAuth 2.0, OpenID Connect or mutual TLS, §4.5), and Agent Cards can be signed with JWS (§8.4). "
-         "Issue separate credentials per agent."),
+         "Supported, not required. Each agent declares its authentication schemes in its Agent Card (§4.5); credentials "
+         "are issued out of band (§7.3), MUST be kept secret and SHOULD be rotated (§13.4). Distinct credentials per "
+         "agent are not required."),
         ("Sign every message, covering body, recipient, task ID, nonce and timestamp.", "A3: D1 vs D2",
          [("", "asr.core.D1.A3.fmt", "asr.core.D2.A3.fmt")],
-         "Not specified: v1.0 requires TLS on every hop (§7.1) and signs only Agent Cards (§8.4). End-to-end message "
-         "signatures would need an extension (`AgentExtension`, §4.4.4)."),
+         "Not specified. Every request is authenticated (§7.4) and production traffic MUST use TLS (§7.1), which protects "
+         "each connection; only Agent Cards can be signed (§8.4), not messages."),
         ("Reject replays with a nonce cache and a freshness window.", "A2-fast: D1 vs D2; E1",
          [("", "asr.core.D1.A2f.fmt", "asr.core.D2.A2f.fmt")],
-         "Not specified: no nonce or timestamp check. Agents MAY use `messageId` to detect duplicate messages."),
+         "Partly. Agents may use `messageId` to detect duplicate messages (§3.3.1); no nonce cache or freshness window "
+         "is specified."),
         ("Never use a handshake where both sides send the same value; bind responses to the challenge and separate the directions.",
          "A1-reflect: D1 vs D2; E4", [("", "asr.core.D1.A1r.fmt", "asr.core.D2.A1r.fmt")],
-         "Avoided by the standard schemes (OAuth 2.0, mutual TLS), which use distinct credentials per party. Matters for "
-         "any custom scheme added on top."),
+         "Met by the standard schemes, none of which has both sides send the same value: servers prove identity with "
+         "TLS certificates (§7.2), and mutual TLS authenticates both ends (§4.5.6)."),
         ("Publish an authorisation registry: which agent may send which message kinds to whom.", "A4-direct under D2 (check K6)",
          [("", "asr.core.D2.A4d.fmt", None)],
-         "Left to each server: it authorises requests from the authenticated identity under its own policies (§7.5). "
-         "The spec defines no shared registry."),
+         "Partly. Each server authorises every request under its own policy, which MAY consider the skills requested, "
+         "the actions and OAuth scopes (§7.5); there is no shared registry of who may send what to whom."),
         ("Rate-limit and lock out failed handshakes.", "E3: per-guess success probability", [("", "E3.p_attempt", None)],
-         "Not specified."),
+         "Partly. Agents SHOULD rate-limit all operations and log authentication failures to prevent brute-force "
+         "attacks (§13.4); lockout is not mentioned."),
         ("Treat authenticated content as untrusted data: gate high-impact actions with an external reference monitor checked against an independent source of truth.",
          "A4-lie and A5: D2 vs D3", item7,
-         "Not specified: the spec gives no guidance on treating other agents' content as untrusted. Add it in the deployment."),
+         "Partly. Agents MUST validate input parameters (§13.4) and sanitise user-provided content against injection "
+         "attacks (§14.1.1); prompt injection, untrusted content from authenticated agents and independent checks "
+         "before high-impact actions are not covered."),
         ("Verify bank-detail changes out of band; a monitor cannot tell a legitimate change from an injected one.",
          "design of monitor rule R1 (E7 not run, so not measured)", [],
-         "Outside the protocol. The auth-required task state (§7.6) can pause a task while a person confirms."),
+         "Outside the protocol. The auth-required task state (§7.6) can pause a task while approval is obtained out of "
+         "band; the state alone MUST NOT be treated as authorisation (§7.6.4)."),
         ("Keep provenance from the user's task to every action, and re-verify it at the point of action.", "monitor rule R4", [],
-         "Partly: server-generated `taskId` and `contextId` link messages to a task; re-verifying provenance at the point "
-         "of action is not specified."),
+         "Partly. Messages carry `taskId`, `contextId` and `referenceTaskIds` (§4.1.4), and agents SHOULD keep audit "
+         "trails for sensitive operations (§13.4); re-verifying provenance at the point of action is not specified."),
         ("Log every decision with the rule that fired; measure false-rejection rates before deploying.", "Table 4, Table 6",
-         [("", "cost.D3.frr_fmt", None)], "Not specified."),
+         [("", "cost.D3.frr_fmt", None)],
+         "Partly. Agents SHOULD log security-relevant events, including authentication failures and authorisation "
+         "denials, and keep audit trails (§13.4); measuring false rejections is not mentioned."),
         ("Set clock tolerance on purpose and measure its cost.", "E2 (Table E2, Figure E2)", [],
-         "Not specified (the spec has no timestamp check). Applies to any freshness window you add."),
+         "Not applicable as specified: A2A has no message timestamp check (timestamps are data fields, §5.6.1). "
+         "Applies to any freshness window added for item 3."),
     ]
     lines = ["# Minimum identity checklist for A2A deployments", "",
              "One page. Each item names the experimental evidence behind it. The A2A column was checked against the "
-             "Agent2Agent (A2A) Protocol Specification, version 1.0.0 (https://a2a-protocol.org/latest/specification/, "
-             "read 7 November 2026); section numbers refer to that version.", "",
+             "Agent2Agent (A2A) Protocol Specification, version 1.0.0 (https://a2a-protocol.org/v1.0.0/specification/, "
+             "read 7 November 2026); section numbers refer to that version. In short, A2A v1.0.0 authenticates requests "
+             "and encrypts connections but leaves message signing, replay protection and the treatment of authenticated "
+             "content to the deployment.", "",
              "| # | Do this | Evidence | Numbers | A2A v1.0.0 |", "| --- | --- | --- | --- | --- |"]
     for i, (text, ev, parts, a2a) in enumerate(items, 1):
         shown = []
@@ -473,43 +483,66 @@ DUAL_USE = """# Dual-use statement
 
 LIMITATIONS = """# Limitations
 
+Matches Appendix A.1 of the paper.
+
 - One toy workflow with three agents and synthetic data; results may not transfer to richer agent systems.
-- The rule-based monitor's R1 uses a perfect source of truth (the account on file), which overstates real monitors. The D0+M and -R1 ablations quantify how much of D3's protection comes from that oracle.
-- At most two model families, with default sampling (temperature cannot be set on the current Claude Haiku model; deviation V1).
-- Agents are stateless between messages; real agents with memory may resist replays or injections differently.
-- A simulated protocol clock; latency measured on one laptop.
-- 30 trials per cell: intervals are wide, and "no significant difference" is not equivalence.
-- Messages are A2A-shaped but this is not the A2A protocol itself.
+- The monitor's R1 uses a perfect source of truth (the account on file), which overstates real monitors. The D0+M and -R1 ablations show how much of D3's protection comes from that oracle.
+- Two model families, each in one configuration, with default sampling (temperature cannot be set on the current Claude Haiku model; deviation V1). The comparison between families is exploratory and says nothing general about vendors or model safety.
+- The agents are stateless between messages; real agents with memory may resist replays or injections differently.
+- A simulated protocol clock; latency and microbenchmarks were measured on one laptop.
+- 30 trials per cell, so intervals are wide and "no significant difference" is not equivalence. A 0/30 cell is consistent with a true rate of up to 11%, and 0/90 with up to 4%. This applies to the false-rejection rates too.
+- The messages are A2A-shaped, but this is not the A2A protocol itself. The checklist's A2A column describes the A2A specification v1.0.0 as read on 7 November 2026.
 - Fixed prompts and three injection texts; other phrasings may behave differently.
-- Found during the runs: the family-1 agents (claude-haiku-5-5) resisted every injection, including the pilot's escalation ladder, so the claim that insiders get past cryptographic identity rests on the family-2 replication (A5) and on A4-lie, not on family 1.
-- Each model was run in one configuration (one prompt set, default sampling, medium effort). The difference between the families is not a general comparison of the two models.
-- Extensions E7 (legitimate bank-detail changes, to measure monitor false rejections on edge cases) and E8 (an LLM-based monitor) were not run.
-- Blocking a fraudulent payment also stops the honest task (denial of service). This is recorded per trial but not tabulated.
-- API costs are estimates: token counts multiplied by per-token prices that were not re-checked against the providers' price lists.
+
+Found while writing the paper:
+
+- Family 1 resisted every injection, so its A5 columns, H6 in family 1 and the A5-blunt cells of the two -R1 ablations cannot show any defence effect. E5 and E6 tested family 1 under D2 only, so they show that its resistance survived those changes, not that the changes have no effect on other models.
+- E7 (legitimate bank-detail changes) and E8 (an LLM-based monitor) were not run. The monitor's false rejections on legitimate edge cases are therefore unmeasured, and checklist item 8 rests on the design of R1, not on a measurement.
+- Which monitor rule blocked family 2's A5 payments under D3 is not tabulated. Denial of service (a task that fails because a defence refused a forged or tampered message) is recorded per trial but not tabulated.
+- The funnel's "records relayed" stage counts any mention of the attacker's account, including in the notes, so for family 1 it overstates how far the injection got.
+- Dollar costs are estimates: token counts multiplied by configured prices that were not re-checked against the providers' price lists.
+- The threat model excludes poisoning the monitor's source of truth, compromise of the orchestrator's or finance agent's keys, and side channels.
+- Each defence ran with one parameter setting in the LLM runs (for example a TOTP window of one step and a 60 s timestamp window). E1 and E2 vary these without an LLM.
 - The reproduction pipeline was tested on Windows only.
 """
 
 REFERENCES = """# References
 
-Entries 1–7 and 13 were checked against their sources on 7 November 2026. Never add a citation without checking it.
+The reference list of the final paper, in the paper's order and numbering. Each entry was checked against its source on 7 November 2026 (authors, title, venue, year, and pages where given). The page ranges of [5] and [14] could not be confirmed independently; their venues, authors and, for [5], the DOI match.
 
-1. A2A Project. Agent2Agent (A2A) Protocol Specification, version 1.0.0. https://a2a-protocol.org/latest/specification/ (accessed 7 November 2026).
-2. Chan, A. et al. IDs for AI Systems. arXiv:2406.12137, 2024. NeurIPS 2024 Workshop on Regulatable ML.
-3. Lee, D. and Tiwari, M. Prompt Infection: LLM-to-LLM Prompt Injection within Multi-Agent Systems. arXiv:2410.07283, 2024.
-4. Greenblatt, R., Shlegeris, B., Sachan, K. and Roger, F. AI Control: Improving Safety Despite Intentional Subversion. Proceedings of the 41st International Conference on Machine Learning (ICML), PMLR 235:16295–16336, 2024. arXiv:2312.06942.
-5. Debenedetti, E. et al. Defeating Prompt Injections by Design. arXiv:2503.18813, 2025.
-6. Greshake, K., Abdelnabi, S., Mishra, S., Endres, C., Holz, T. and Fritz, M. Not What You've Signed Up For: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection. Proceedings of the 16th ACM Workshop on Artificial Intelligence and Security (AISec '23), pp. 79–90, 2023. doi:10.1145/3605764.3623985. arXiv:2302.12173. (The ACM listing puts Abdelnabi first.)
-7. OWASP. LLM01:2025 Prompt Injection. OWASP Top 10 for LLM Applications 2025. https://genai.owasp.org/llmrisk/llm01-prompt-injection/
-8. M'Raihi, D. et al. RFC 6238: TOTP: Time-Based One-Time Password Algorithm. IETF, 2011.
-9. Josefsson, S. and Liusvaara, I. RFC 8032: Edwards-Curve Digital Signature Algorithm (EdDSA). IETF, 2017.
-10. Rescorla, E. RFC 8446: The Transport Layer Security (TLS) Protocol Version 1.3. IETF, 2018.
-11. Neuman, C. et al. RFC 4120: The Kerberos Network Authentication Service (V5). IETF, 2005.
-12. Needham, R. and Schroeder, M. Using encryption for authentication in large networks of computers. Communications of the ACM, 21(12), 1978.
-13. Lowe, G. Breaking and fixing the Needham-Schroeder public-key protocol using FDR. In Tools and Algorithms for the Construction and Analysis of Systems (TACAS 1996), LNCS 1055, pp. 147–166. Springer, 1996. doi:10.1007/3-540-61042-1_43.
-14. Hardy, N. The Confused Deputy (or why capabilities might have been invented). ACM SIGOPS Operating Systems Review, 22(4), 1988.
-15. Wilson, E. B. Probable inference, the law of succession, and statistical inference. Journal of the American Statistical Association, 22(158), 1927.
-16. Newcombe, R. G. Interval estimation for the difference between independent proportions: comparison of eleven methods. Statistics in Medicine, 17(8), 1998.
-17. Holm, S. A simple sequentially rejective multiple test procedure. Scandinavian Journal of Statistics, 6(2), 1979.
+1. A2A Project. Agent2Agent (A2A) protocol specification, version 1.0.0. https://a2a-protocol.org/v1.0.0/specification/, 2026. Accessed 7 November 2026.
+2. D. Lee and M. Tiwari. Prompt infection: LLM-to-LLM prompt injection within multi-agent systems. arXiv:2410.07283, 2024. https://arxiv.org/abs/2410.07283
+3. Xiangming Gu, Xiaosen Zheng, Tianyu Pang, Chao Du, Qian Liu, Ye Wang, Jing Jiang and Min Lin. Agent Smith: A single image can jailbreak one million multimodal LLM agents exponentially fast. In Proceedings of the 41st International Conference on Machine Learning (ICML), volume 235 of PMLR, pages 16647–16672, 2024. https://proceedings.mlr.press/v235/gu24e.html
+4. Zaibin Zhang, Yongting Zhang, Lijun Li, Hongzhi Gao, Lijun Wang, Huchuan Lu, Feng Zhao, Yu Qiao and Jing Shao. PsySafe: A comprehensive framework for psychological-based attack, defense, and evaluation of multi-agent system safety. In Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (ACL), Volume 1: Long Papers, pages 15202–15231, 2024. https://aclanthology.org/2024.acl-long.812
+5. Sumeet Ramesh Motwani, Mikhail Baranchuk, Martin Strohmeier, Vijay Bolina, Philip H. S. Torr, Lewis Hammond and Christian Schroeder de Witt. Secret collusion among AI agents: Multi-agent deception via steganography. In Advances in Neural Information Processing Systems 37 (NeurIPS), pages 73439–73486, 2024. https://doi.org/10.52202/079017-2336
+6. Alan Chan et al. IDs for AI systems. arXiv:2406.12137, 2024. https://arxiv.org/abs/2406.12137. Version 3; RegML workshop at NeurIPS 2024.
+7. Alan Chan, Carson Ezell, Max Kaufmann, Kevin Wei, Lewis Hammond, Herbie Bradley, Emma Bluemke, Nitarshan Rajkumar, David Krueger, Noam Kolt, Lennart Heim and Markus Anderljung. Visibility into AI agents. In Proceedings of the 2024 ACM Conference on Fairness, Accountability, and Transparency (FAccT), pages 958–973. ACM, 2024. https://doi.org/10.1145/3630106.3658948
+8. Alan Chan, Kevin Wei, Sihao Huang, Nitarshan Rajkumar, Elija Perrier, Seth Lazar, Gillian K. Hadfield and Markus Anderljung. Infrastructure for AI agents. Transactions on Machine Learning Research, 2025. https://openreview.net/forum?id=Ckh17xN2R2
+9. Tobin South, Samuele Marro, Thomas Hardjono, Robert Mahari, Cedric Deslandes Whitney, Alan Chan and Alex Pentland. Position: AI agents need authenticated delegation. In Proceedings of the 42nd International Conference on Machine Learning (ICML), volume 267 of PMLR, pages 82211–82231, 2025. https://proceedings.mlr.press/v267/south25a.html
+10. Leslie Lamport, Robert Shostak and Marshall Pease. The Byzantine generals problem. ACM Transactions on Programming Languages and Systems, 4(3):382–401, 1982.
+11. Pengfei He, Yuping Lin, Shen Dong, Han Xu, Yue Xing and Hui Liu. Red-teaming LLM multi-agent systems via communication attacks. In Findings of the Association for Computational Linguistics: ACL 2025, pages 6726–6747, 2025. https://aclanthology.org/2025.findings-acl.349
+12. Kai Greshake et al. Not what you've signed up for: Compromising real-world LLM-integrated applications with indirect prompt injection. In Proceedings of the 16th ACM Workshop on Artificial Intelligence and Security (AISec), pages 79–90, 2023. https://arxiv.org/abs/2302.12173
+13. Qiusi Zhan, Zhixiang Liang, Zifan Ying and Daniel Kang. InjecAgent: Benchmarking indirect prompt injections in tool-integrated large language model agents. In Findings of the Association for Computational Linguistics: ACL 2024, pages 10471–10506, 2024. https://aclanthology.org/2024.findings-acl.624
+14. Edoardo Debenedetti, Jie Zhang, Mislav Balunović, Luca Beurer-Kellner, Marc Fischer and Florian Tramèr. AgentDojo: A dynamic environment to evaluate prompt injection attacks and defenses for LLM agents. In Advances in Neural Information Processing Systems 37 (NeurIPS), Datasets and Benchmarks Track, pages 82895–82920, 2024. https://doi.org/10.52202/079017-2636
+15. Egor Zverev, Sahar Abdelnabi, Soroush Tabesh, Mario Fritz and Christoph Lampert. Can LLMs separate instructions from data? And what do we even mean by that? In International Conference on Learning Representations (ICLR), 2025. https://arxiv.org/abs/2403.06833
+16. Ryan Greenblatt, Buck Shlegeris, Kshitij Sachan and Fabien Roger. AI control: Improving safety despite intentional subversion. In Proceedings of the 41st International Conference on Machine Learning (ICML), volume 235 of PMLR, pages 16295–16336, 2024. https://arxiv.org/abs/2312.06942
+17. Edoardo Debenedetti et al. Defeating prompt injections by design. arXiv:2503.18813, 2025. https://arxiv.org/abs/2503.18813
+18. Zhen Xiang, Linzhi Zheng, Yanjie Li, Junyuan Hong, Qinbin Li, Han Xie, Jiawei Zhang, Zidi Xiong, Chulin Xie, Carl Yang, Dawn Song and Bo Li. GuardAgent: Safeguard LLM agents via knowledge-enabled reasoning. In Proceedings of the 42nd International Conference on Machine Learning (ICML), volume 267 of PMLR, pages 68316–68342, 2025. https://proceedings.mlr.press/v267/xiang25a.html
+19. Jen-Tse Huang, Jiaxu Zhou, Tailin Jin, Xuhui Zhou, Zixi Chen, Wenxuan Wang, Youliang Yuan, Michael Lyu and Maarten Sap. On the resilience of LLM-based multi-agent collaboration with faulty agents. In Proceedings of the 42nd International Conference on Machine Learning (ICML), volume 267 of PMLR, pages 26202–26226, 2025. https://proceedings.mlr.press/v267/huang25ay.html
+20. Yupei Liu, Yuqi Jia, Runpeng Geng, Jinyuan Jia and Neil Zhenqiang Gong. Formalizing and benchmarking prompt injection attacks and defenses. In 33rd USENIX Security Symposium (USENIX Security 24), pages 1831–1847. USENIX Association, 2024. https://www.usenix.org/conference/usenixsecurity24/presentation/liu-yupei
+21. OWASP Foundation. OWASP Top 10 for LLM Applications 2025: LLM01:2025 Prompt Injection. Version 2025, published 18 November 2024. https://genai.owasp.org/, 2024.
+22. Sizhe Chen, Julien Piet, Chawin Sitawarin and David Wagner. StruQ: Defending against prompt injection with structured queries. In 34th USENIX Security Symposium (USENIX Security 25), pages 2383–2400. USENIX Association, 2025. https://www.usenix.org/conference/usenixsecurity25/presentation/chen-sizhe
+23. Yuhao Wu, Franziska Roesner, Tadayoshi Kohno, Ning Zhang and Umar Iqbal. IsolateGPT: An execution isolation architecture for LLM-based agentic systems. In Network and Distributed System Security Symposium (NDSS), 2025. https://www.ndss-symposium.org/ndss-paper/isolategpt-an-execution-isolation-architecture-for-llm-based-agentic-systems/
+24. David M'Raihi et al. TOTP: Time-based one-time password algorithm. IETF RFC 6238, 2011. https://www.rfc-editor.org/rfc/rfc6238
+25. Simon Josefsson and Ilari Liusvaara. Edwards-Curve digital signature algorithm (EdDSA). IETF RFC 8032, 2017. https://www.rfc-editor.org/rfc/rfc8032
+26. Eric Rescorla. The transport layer security (TLS) protocol version 1.3. IETF RFC 8446, 2018. https://www.rfc-editor.org/rfc/rfc8446
+27. Clifford Neuman et al. The Kerberos network authentication service (V5). IETF RFC 4120, 2005. https://www.rfc-editor.org/rfc/rfc4120
+28. Gavin Lowe. Breaking and fixing the Needham-Schroeder public-key protocol using FDR. In Tools and Algorithms for the Construction and Analysis of Systems (TACAS), volume 1055 of Lecture Notes in Computer Science, pages 147–166. Springer, 1996.
+29. Roger M. Needham and Michael D. Schroeder. Using encryption for authentication in large networks of computers. Communications of the ACM, 21(12):993–999, 1978.
+30. Norm Hardy. The confused deputy. ACM SIGOPS Operating Systems Review, 1988.
+31. Edwin B. Wilson. Probable inference, the law of succession, and statistical inference. Journal of the American Statistical Association, 1927.
+32. Sture Holm. A simple sequentially rejective multiple test procedure. Scandinavian Journal of Statistics, 1979.
+33. Robert G. Newcombe. Interval estimation for the difference between independent proportions. Statistics in Medicine, 1998.
 """
 
 

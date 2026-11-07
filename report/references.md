@@ -1,21 +1,37 @@
 # References
 
-Entries 1–7 and 13 were checked against their sources on 7 November 2026. Never add a citation without checking it.
+The reference list of the final paper, in the paper's order and numbering. Each entry was checked against its source on 7 November 2026 (authors, title, venue, year, and pages where given). The page ranges of [5] and [14] could not be confirmed independently; their venues, authors and, for [5], the DOI match.
 
-1. A2A Project. Agent2Agent (A2A) Protocol Specification, version 1.0.0. https://a2a-protocol.org/latest/specification/ (accessed 7 November 2026).
-2. Chan, A. et al. IDs for AI Systems. arXiv:2406.12137, 2024. NeurIPS 2024 Workshop on Regulatable ML.
-3. Lee, D. and Tiwari, M. Prompt Infection: LLM-to-LLM Prompt Injection within Multi-Agent Systems. arXiv:2410.07283, 2024.
-4. Greenblatt, R., Shlegeris, B., Sachan, K. and Roger, F. AI Control: Improving Safety Despite Intentional Subversion. Proceedings of the 41st International Conference on Machine Learning (ICML), PMLR 235:16295–16336, 2024. arXiv:2312.06942.
-5. Debenedetti, E. et al. Defeating Prompt Injections by Design. arXiv:2503.18813, 2025.
-6. Greshake, K., Abdelnabi, S., Mishra, S., Endres, C., Holz, T. and Fritz, M. Not What You've Signed Up For: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection. Proceedings of the 16th ACM Workshop on Artificial Intelligence and Security (AISec '23), pp. 79–90, 2023. doi:10.1145/3605764.3623985. arXiv:2302.12173. (The ACM listing puts Abdelnabi first.)
-7. OWASP. LLM01:2025 Prompt Injection. OWASP Top 10 for LLM Applications 2025. https://genai.owasp.org/llmrisk/llm01-prompt-injection/
-8. M'Raihi, D. et al. RFC 6238: TOTP: Time-Based One-Time Password Algorithm. IETF, 2011.
-9. Josefsson, S. and Liusvaara, I. RFC 8032: Edwards-Curve Digital Signature Algorithm (EdDSA). IETF, 2017.
-10. Rescorla, E. RFC 8446: The Transport Layer Security (TLS) Protocol Version 1.3. IETF, 2018.
-11. Neuman, C. et al. RFC 4120: The Kerberos Network Authentication Service (V5). IETF, 2005.
-12. Needham, R. and Schroeder, M. Using encryption for authentication in large networks of computers. Communications of the ACM, 21(12), 1978.
-13. Lowe, G. Breaking and fixing the Needham-Schroeder public-key protocol using FDR. In Tools and Algorithms for the Construction and Analysis of Systems (TACAS 1996), LNCS 1055, pp. 147–166. Springer, 1996. doi:10.1007/3-540-61042-1_43.
-14. Hardy, N. The Confused Deputy (or why capabilities might have been invented). ACM SIGOPS Operating Systems Review, 22(4), 1988.
-15. Wilson, E. B. Probable inference, the law of succession, and statistical inference. Journal of the American Statistical Association, 22(158), 1927.
-16. Newcombe, R. G. Interval estimation for the difference between independent proportions: comparison of eleven methods. Statistics in Medicine, 17(8), 1998.
-17. Holm, S. A simple sequentially rejective multiple test procedure. Scandinavian Journal of Statistics, 6(2), 1979.
+1. A2A Project. Agent2Agent (A2A) protocol specification, version 1.0.0. https://a2a-protocol.org/v1.0.0/specification/, 2026. Accessed 7 November 2026.
+2. D. Lee and M. Tiwari. Prompt infection: LLM-to-LLM prompt injection within multi-agent systems. arXiv:2410.07283, 2024. https://arxiv.org/abs/2410.07283
+3. Xiangming Gu, Xiaosen Zheng, Tianyu Pang, Chao Du, Qian Liu, Ye Wang, Jing Jiang and Min Lin. Agent Smith: A single image can jailbreak one million multimodal LLM agents exponentially fast. In Proceedings of the 41st International Conference on Machine Learning (ICML), volume 235 of PMLR, pages 16647–16672, 2024. https://proceedings.mlr.press/v235/gu24e.html
+4. Zaibin Zhang, Yongting Zhang, Lijun Li, Hongzhi Gao, Lijun Wang, Huchuan Lu, Feng Zhao, Yu Qiao and Jing Shao. PsySafe: A comprehensive framework for psychological-based attack, defense, and evaluation of multi-agent system safety. In Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (ACL), Volume 1: Long Papers, pages 15202–15231, 2024. https://aclanthology.org/2024.acl-long.812
+5. Sumeet Ramesh Motwani, Mikhail Baranchuk, Martin Strohmeier, Vijay Bolina, Philip H. S. Torr, Lewis Hammond and Christian Schroeder de Witt. Secret collusion among AI agents: Multi-agent deception via steganography. In Advances in Neural Information Processing Systems 37 (NeurIPS), pages 73439–73486, 2024. https://doi.org/10.52202/079017-2336
+6. Alan Chan et al. IDs for AI systems. arXiv:2406.12137, 2024. https://arxiv.org/abs/2406.12137. Version 3; RegML workshop at NeurIPS 2024.
+7. Alan Chan, Carson Ezell, Max Kaufmann, Kevin Wei, Lewis Hammond, Herbie Bradley, Emma Bluemke, Nitarshan Rajkumar, David Krueger, Noam Kolt, Lennart Heim and Markus Anderljung. Visibility into AI agents. In Proceedings of the 2024 ACM Conference on Fairness, Accountability, and Transparency (FAccT), pages 958–973. ACM, 2024. https://doi.org/10.1145/3630106.3658948
+8. Alan Chan, Kevin Wei, Sihao Huang, Nitarshan Rajkumar, Elija Perrier, Seth Lazar, Gillian K. Hadfield and Markus Anderljung. Infrastructure for AI agents. Transactions on Machine Learning Research, 2025. https://openreview.net/forum?id=Ckh17xN2R2
+9. Tobin South, Samuele Marro, Thomas Hardjono, Robert Mahari, Cedric Deslandes Whitney, Alan Chan and Alex Pentland. Position: AI agents need authenticated delegation. In Proceedings of the 42nd International Conference on Machine Learning (ICML), volume 267 of PMLR, pages 82211–82231, 2025. https://proceedings.mlr.press/v267/south25a.html
+10. Leslie Lamport, Robert Shostak and Marshall Pease. The Byzantine generals problem. ACM Transactions on Programming Languages and Systems, 4(3):382–401, 1982.
+11. Pengfei He, Yuping Lin, Shen Dong, Han Xu, Yue Xing and Hui Liu. Red-teaming LLM multi-agent systems via communication attacks. In Findings of the Association for Computational Linguistics: ACL 2025, pages 6726–6747, 2025. https://aclanthology.org/2025.findings-acl.349
+12. Kai Greshake et al. Not what you've signed up for: Compromising real-world LLM-integrated applications with indirect prompt injection. In Proceedings of the 16th ACM Workshop on Artificial Intelligence and Security (AISec), pages 79–90, 2023. https://arxiv.org/abs/2302.12173
+13. Qiusi Zhan, Zhixiang Liang, Zifan Ying and Daniel Kang. InjecAgent: Benchmarking indirect prompt injections in tool-integrated large language model agents. In Findings of the Association for Computational Linguistics: ACL 2024, pages 10471–10506, 2024. https://aclanthology.org/2024.findings-acl.624
+14. Edoardo Debenedetti, Jie Zhang, Mislav Balunović, Luca Beurer-Kellner, Marc Fischer and Florian Tramèr. AgentDojo: A dynamic environment to evaluate prompt injection attacks and defenses for LLM agents. In Advances in Neural Information Processing Systems 37 (NeurIPS), Datasets and Benchmarks Track, pages 82895–82920, 2024. https://doi.org/10.52202/079017-2636
+15. Egor Zverev, Sahar Abdelnabi, Soroush Tabesh, Mario Fritz and Christoph Lampert. Can LLMs separate instructions from data? And what do we even mean by that? In International Conference on Learning Representations (ICLR), 2025. https://arxiv.org/abs/2403.06833
+16. Ryan Greenblatt, Buck Shlegeris, Kshitij Sachan and Fabien Roger. AI control: Improving safety despite intentional subversion. In Proceedings of the 41st International Conference on Machine Learning (ICML), volume 235 of PMLR, pages 16295–16336, 2024. https://arxiv.org/abs/2312.06942
+17. Edoardo Debenedetti et al. Defeating prompt injections by design. arXiv:2503.18813, 2025. https://arxiv.org/abs/2503.18813
+18. Zhen Xiang, Linzhi Zheng, Yanjie Li, Junyuan Hong, Qinbin Li, Han Xie, Jiawei Zhang, Zidi Xiong, Chulin Xie, Carl Yang, Dawn Song and Bo Li. GuardAgent: Safeguard LLM agents via knowledge-enabled reasoning. In Proceedings of the 42nd International Conference on Machine Learning (ICML), volume 267 of PMLR, pages 68316–68342, 2025. https://proceedings.mlr.press/v267/xiang25a.html
+19. Jen-Tse Huang, Jiaxu Zhou, Tailin Jin, Xuhui Zhou, Zixi Chen, Wenxuan Wang, Youliang Yuan, Michael Lyu and Maarten Sap. On the resilience of LLM-based multi-agent collaboration with faulty agents. In Proceedings of the 42nd International Conference on Machine Learning (ICML), volume 267 of PMLR, pages 26202–26226, 2025. https://proceedings.mlr.press/v267/huang25ay.html
+20. Yupei Liu, Yuqi Jia, Runpeng Geng, Jinyuan Jia and Neil Zhenqiang Gong. Formalizing and benchmarking prompt injection attacks and defenses. In 33rd USENIX Security Symposium (USENIX Security 24), pages 1831–1847. USENIX Association, 2024. https://www.usenix.org/conference/usenixsecurity24/presentation/liu-yupei
+21. OWASP Foundation. OWASP Top 10 for LLM Applications 2025: LLM01:2025 Prompt Injection. Version 2025, published 18 November 2024. https://genai.owasp.org/, 2024.
+22. Sizhe Chen, Julien Piet, Chawin Sitawarin and David Wagner. StruQ: Defending against prompt injection with structured queries. In 34th USENIX Security Symposium (USENIX Security 25), pages 2383–2400. USENIX Association, 2025. https://www.usenix.org/conference/usenixsecurity25/presentation/chen-sizhe
+23. Yuhao Wu, Franziska Roesner, Tadayoshi Kohno, Ning Zhang and Umar Iqbal. IsolateGPT: An execution isolation architecture for LLM-based agentic systems. In Network and Distributed System Security Symposium (NDSS), 2025. https://www.ndss-symposium.org/ndss-paper/isolategpt-an-execution-isolation-architecture-for-llm-based-agentic-systems/
+24. David M'Raihi et al. TOTP: Time-based one-time password algorithm. IETF RFC 6238, 2011. https://www.rfc-editor.org/rfc/rfc6238
+25. Simon Josefsson and Ilari Liusvaara. Edwards-Curve digital signature algorithm (EdDSA). IETF RFC 8032, 2017. https://www.rfc-editor.org/rfc/rfc8032
+26. Eric Rescorla. The transport layer security (TLS) protocol version 1.3. IETF RFC 8446, 2018. https://www.rfc-editor.org/rfc/rfc8446
+27. Clifford Neuman et al. The Kerberos network authentication service (V5). IETF RFC 4120, 2005. https://www.rfc-editor.org/rfc/rfc4120
+28. Gavin Lowe. Breaking and fixing the Needham-Schroeder public-key protocol using FDR. In Tools and Algorithms for the Construction and Analysis of Systems (TACAS), volume 1055 of Lecture Notes in Computer Science, pages 147–166. Springer, 1996.
+29. Roger M. Needham and Michael D. Schroeder. Using encryption for authentication in large networks of computers. Communications of the ACM, 21(12):993–999, 1978.
+30. Norm Hardy. The confused deputy. ACM SIGOPS Operating Systems Review, 1988.
+31. Edwin B. Wilson. Probable inference, the law of succession, and statistical inference. Journal of the American Statistical Association, 1927.
+32. Sture Holm. A simple sequentially rejective multiple test procedure. Scandinavian Journal of Statistics, 1979.
+33. Robert G. Newcombe. Interval estimation for the difference between independent proportions. Statistics in Medicine, 1998.

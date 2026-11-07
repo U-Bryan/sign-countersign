@@ -6,11 +6,11 @@ abstract: >-
   A pre-registered testbed that measures which attacks on agent-to-agent messaging
   each layer of identity defence stops (no defence, a shared TOTP handshake,
   per-agent Ed25519 signatures, and signatures plus an external reference monitor),
-  with attack success read from a fake payment ledger. Swarm Alignment Sprint,
+  with attack success read from a fake payment ledger. Apart Research Swarm Alignment Sprint (November 2026),
   Track 3 (Strengthening Agent Infrastructure).
 authors:
   - family-names: Uzoatu
-    given-names: Bryan
+    given-names: Ifeanyi Bryan
     affiliation: "University of Bristol"
 repository-code: "https://github.com/U-Bryan/sign-countersign"
 license: MIT

@@ -1,8 +1,8 @@
 # Sign and Countersign
 
 **Cryptographic identity is necessary but not sufficient for agent swarms.**
-Bryan Uzoatu, PhD Researcher in Cyber Security, University of Bristol.
-Swarm Alignment Sprint, Track 3 (Strengthening Agent Infrastructure).
+Ifeanyi Bryan Uzoatu, PhD Researcher in Cyber Security, University of Bristol.
+Apart Research Swarm Alignment Sprint, November 2026. Track 3: Strengthening Agent Infrastructure.
 
 This repository tests whether a sign/countersign handshake protects agent-to-agent messages, and finds the attacks it cannot stop. Three LLM agents (orchestrator, records, finance) pay fake invoices over an A2A-shaped message bus. Attack code ("Mallory") tries five classes of attack (ten pre-registered variants) against four defence layers:
 
@@ -122,7 +122,7 @@ GitHub's "Cite this repository" button uses [CITATION.cff](CITATION.cff). In Bib
 
 ```bibtex
 @software{uzoatu2026signcountersign,
-  author = {Uzoatu, Bryan},
+  author = {Uzoatu, Ifeanyi Bryan},
   title  = {Sign and Countersign: Cryptographic Identity Is Necessary but Not Sufficient for Agent Swarms},
   year   = {2026},
   url    = {https://github.com/U-Bryan/sign-countersign}

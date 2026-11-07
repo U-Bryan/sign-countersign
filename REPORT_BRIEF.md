@@ -39,7 +39,7 @@ The experiment is finished. Every result, table, figure and log excerpt already 
 
 | Input | Your answer | Notes |
 | --- | --- | --- |
-| Author name(s), in order | Bryan Uzoatu | |
+| Author name(s), in order | Ifeanyi Bryan Uzoatu | |
 | Affiliation(s) | PhD Researcher in Cyber Security, University of Bristol | |
 | Contact email for the paper (optional) | | |
 | Sprint dates | | For example "6–9 November 2026". |
