@@ -1,7 +1,7 @@
 # PROGRESS: Sign and Countersign
 
 Last updated: 2026-11-07 by Claude Code
-Current phase: 8 (report built; waiting for human inputs) | Next step: C5 inputs (authors, affiliation, sprint dates, motivation, papers, leave-outs) -> fill REPORT_BRIEF.md Section 1 -> rebuild the pack (scripts/make_report_pack.py) -> Claude writes report/PAPER.md -> C6 (GitHub remote + make public) -> tag submission | Blocked on: C5, C6
+Current phase: 8 (published; final paper edits pending) | Next step: apply the final edits to the paper (HANDOVER.md, local) -> add the final PDF and LaTeX source to the repository -> tag submission | Blocked on: final paper
 
 | Phase | Status (TODO / IN PROGRESS / DONE) | Gate result | Commit / tag | Notes |
 | --- | --- | --- | --- | --- |
@@ -16,7 +16,7 @@ Current phase: 8 (report built; waiting for human inputs) | Next step: C5 inputs
 | 8 Report + handoff | IN PROGRESS | final QA: fresh clone `reproduce.py` exit 0, all tables + values.json byte-identical (30 tables at 5a76233; re-checked at f3f772a after the generator fixes: 31 tables); no [MISSING]; secret scan PASS; prereg and prompts unchanged since tags; handoff complete except C5 items | b29e7e8, 5a76233, 7fa7e02, f3f772a | waiting for C5 (author details) and C6 (GitHub); report-writing brief ready (REPORT_BRIEF.md) |
 
 ## Checkpoints
-C1 keys: DONE for family 1 (Anthropic key works); family 2 deferred: OpenAI key valid but account has no credits (429 insufficient quota) · C2 GitHub: local repo created (git installed via winget 2026-11-06); no remote yet · C3 tiers approved: T1, T2 (ablations now; family2 when the human adds OpenAI credits), T3 E4, E5, E6 (2026-11-06) · C4: - · C5 inputs: partial (2026-11-07): author Bryan Uzoatu, PhD Researcher in Cyber Security, University of Bristol; licences MIT (code) and CC BY 4.0 (data, documents); leave-outs: personal email and local file paths (removed). Still open: sprint dates, motivation paragraph, extra papers · C6 publish: GitHub CLI installed and signed in as U-Bryan (2026-11-07); repository not created yet
+C1 keys: DONE for family 1 (Anthropic key works); family 2 deferred: OpenAI key valid but account has no credits (429 insufficient quota) · C2 GitHub: local repo created (git installed via winget 2026-11-06); no remote yet · C3 tiers approved: T1, T2 (ablations now; family2 when the human adds OpenAI credits), T3 E4, E5, E6 (2026-11-06) · C4: - · C5 inputs: partial (2026-11-07): author Bryan Uzoatu, PhD Researcher in Cyber Security, University of Bristol; licences MIT (code) and CC BY 4.0 (data, documents); leave-outs: personal email and local file paths (removed). Still open: sprint dates, motivation paragraph, extra papers · C6 publish: DONE 2026-11-07, public at https://github.com/U-Bryan/sign-countersign (tags prereg-v1, prompts-v1, main-run-complete pushed; tag submission to follow with the final paper)
 
 Family 2 enabled 2026-11-06 after the human added OpenAI credits (model check OK, honest pilot 10/10). The analysis treats family 2 as a pre-registered T2 replication of the A5 column: same verdict rules, its own Holm family, reported separately (never pooled).
 
