@@ -25,8 +25,10 @@ results/*.out
 results/*.err
 handoff/*.zip
 
-# Report-writing pack (rebuilt by scripts/make_report_pack.py) and the author's local copy of the sprint plan
-handoff/report_pack/
-handoff/SOURCE_PLAN.md
-handoff/PAPER_EDITS.md
+# Local working files, kept out of the public repository: notes for Claude Code, the paper-writing brief and
+# its pack builder, the paper-handover note, and the handoff folder (zips, the author's copy of the sprint plan)
+CLAUDE.md
+REPORT_BRIEF.md
 HANDOVER.md
+scripts/make_report_pack.py
+handoff/

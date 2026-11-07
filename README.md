@@ -106,7 +106,6 @@ python3 -m venv .venv
 | `figures/`, `tables/`, `report/` | generated outputs |
 | `docs/` | threat model, deviations, pilot bugs, configuration, limitations, dual use, A2A checklist |
 | `RUNBOOK.md`, `PROGRESS.md` | the executable plan and its progress log |
-| `REPORT_BRIEF.md`, `scripts/make_report_pack.py` | instructions for writing the paper with Claude, and the script that builds the upload pack (`handoff/report_pack/`) |
 
 ## Safety and dual use
 

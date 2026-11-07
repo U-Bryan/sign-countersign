@@ -23,8 +23,6 @@ from pathlib import Path
 
 from config import ROOT, load_config
 
-AUTHOR = "Ifeanyi Bryan Uzoatu"
-AFFILIATION = "PhD Researcher in Cyber Security, University of Bristol"
 
 
 class Ctx:
@@ -353,55 +351,6 @@ def results_md(c: Ctx, chosen: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
-def paper_md(c: Ctx) -> str:
-    return f"""# Sign and Countersign: Cryptographic Identity Is Necessary but Not Sufficient for Agent Swarms
-
-_Generated skeleton: `make_report.py` overwrites this file on every run. Write the final paper in `report/PAPER.md`; the instructions are in `REPORT_BRIEF.md`._
-
-{AUTHOR} · {AFFILIATION} · Apart Research Swarm Alignment Sprint, November 2026 · Track 3: Strengthening Agent Infrastructure
-
-## Abstract (write last; claim no more than Table 10 supports)
-
-[TO FILL after reading the verdict table.] Auto-generated headline for reference: {headline(c)}
-
-## 1 Introduction (0.75 page)
-
-[TO FILL: motivation in your own words: the soldier and countersign story.] Agent-to-agent protocols such as A2A let agents act on each other's messages. We ask which attacks on that messaging each layer of identity defence stops, and which get past every cryptographic layer. Contributions: (1) a ground-truth testbed where success is read from a ledger, not from model text; (2) a 4 × 10 attack matrix with pre-registered success rules and 30 trials per cell; (3) a protocol-level oracle that separates what each protocol lets through from what the models resist; (4) a reusable attack suite and a minimum identity checklist for A2A deployments.
-
-## 2 Related work (0.5 page)
-
-Agent identity (Chan et al., IDs for AI Systems); prompt injection between agents (Lee & Tiwari, Prompt Infection; Greshake et al.); AI control (Greenblatt et al.); CaMeL-style system security (Debenedetti et al.). Security protocols: TOTP (RFC 6238), Ed25519 (RFC 8032), TLS 1.3 (RFC 8446), Kerberos (RFC 4120), the Needham–Schroeder relay flaw (Lowe, 1996), reflection attacks on symmetric challenge–response, and the confused deputy (Hardy, 1988). [TO FILL: 3–4 sentences positioning the work.]
-
-## 3 Threat model and setup (1.5 pages)
-
-{c.fig("fig1_architecture", "Figure 1. The procurement workflow, the bus, the monitor and Mallory's entry points.")}
-
-Three LLM agents (orchestrator, records, finance) pay fake invoices. Mallory is attack code with capabilities enforced per attack (Table: docs/THREAT_MODEL.md). Defences: D0 none; D1 shared TOTP handshake as first proposed; D2 per-agent Ed25519 keys with signed messages, nonce cache and 60 s window; D3 = D2 + rule-based reference monitor. Configuration: Table 1 (docs/CONFIG_TABLE.md). Success rules were pre-registered (PREREGISTRATION.md, tag `prereg-v1`) and read from the ledger only; an independent re-grader agreed on every trial.
-
-## 4 Results (2.5 pages)
-
-{c.fig("fig2_asr_heatmap", "Figure 2. Attack success rate (k/n) per defence and attack.")}
-
-{c.table("table2b_headline_matrix")}
-
-Verdicts: H1 {c.v('verdict.H1')}, H2 {c.v('verdict.H2')}, H3 {c.v('verdict.H3')}, H4 {c.v('verdict.H4')}, H5 {c.v('verdict.H5')}, H6 {c.v('verdict.H6')}, H7 {c.v('verdict.H7')}, H8 {c.v('verdict.H8')}, H9 {c.v('verdict.H9')} (Table 10).
-
-Costs: {c.table("table4_costs")}
-
-Box 1 (report/excerpts/box1_a5_success_d2.md) walks through one A5 success under D2.
-
-[TO FILL: 2–3 paragraphs interpreting the matrix, the costs and Box 1. Separate what crypto proves (who sent a message) from what it cannot (whether the content is safe).]
-
-## 5 Discussion (1 page)
-
-[TO FILL. Points to cover: identity is necessary (D2 vs D1 on A3, A4-direct, A1-reflect) but not sufficient (A5, A4-lie under D2); the monitor's power comes from an independent source of truth (D0+M and -R1 ablations); the reflection flaw shows protocol details matter; costs are small (H7).]
-
-## Appendices
-
-A. Limitations and dual use (docs/LIMITATIONS.md, docs/DUAL_USE.md) · B. Prompts (prompts/*.txt) and A5 texts (attack_texts/) · C. Configuration (docs/CONFIG_TABLE.md) · D. Minimum identity checklist for A2A deployments (docs/A2A_MINIMUM_IDENTITY_CHECKLIST.md) · E. Pilot bugs (docs/PILOT_BUGS.md) and deviations (docs/DEVIATIONS.md)
-"""
-
-
 def checklist_md(c: Ctx) -> str:
     # Each item: (advice, evidence label, [(label, key_before, key_after_or_None), ...]).
     # Item 7 cites A4-lie and the family-2 A5 column: family 1 resisted every injection (0/90 under
@@ -617,7 +566,7 @@ HANDOFF_ITEMS = [
     ("(must) log excerpts: A3 under D1", "report/excerpts/ex2_a3_success_d1.md"),
     ("(must) log excerpts: monitor block", "report/excerpts/ex3_monitor_block_d3.md"),
     ("surprises", "report/RESULTS.md"), ("wrongly rejected honest tasks", "docs/FALSE_REJECTIONS.md"),
-    ("second-family results", "tables/table8_family_compare.csv"), ("paper draft (authors/dates from C5)", "report/paper_draft.md"),
+    ("second-family results", "tables/table8_family_compare.csv"),
     ("references (checked)", "report/references.md"), ("dual-use appendix", "docs/DUAL_USE.md"),
     ("limitations", "docs/LIMITATIONS.md"), ("A2A minimum identity checklist", "docs/A2A_MINIMUM_IDENTITY_CHECKLIST.md"),
     ("deviations log", "docs/DEVIATIONS.md"), ("threat model", "docs/THREAT_MODEL.md"),
@@ -631,18 +580,17 @@ def build_handoff() -> None:
         for p in (ROOT / "logs").rglob("*.jsonl"):
             if "mock" not in p.parts:
                 z.write(p, p.relative_to(ROOT))
-    skip = {".venv", ".git", "logs", "handoff", "__pycache__", ".pytest_cache", ".hypothesis", "secrets"}
-    with zipfile.ZipFile(h / "code.zip", "w", zipfile.ZIP_DEFLATED) as z:
-        for p in ROOT.rglob("*"):
-            rel = p.relative_to(ROOT)
-            if p.is_file() and not (set(rel.parts) & skip) and p.name != ".env" and "mock" not in rel.parts:
-                z.write(p, rel)
+    # code.zip holds exactly the committed files (git archive), so local-only notes never leak into it.
+    from gitutil import git
+    ok, out = git("archive", "--format=zip", "-o", str(h / "code.zip"), "HEAD")
+    if not ok:
+        raise SystemExit(f"git archive failed: {out}")
     lines = ["# Handoff checklist (source plan, Part 2)", "", f"Generated {datetime.now(timezone.utc).isoformat(timespec='seconds')}.", ""]
     for label, path in HANDOFF_ITEMS:
         ok = (ROOT / path).exists()
         lines.append(f"- [{'x' if ok else ' '}] {label}: `{path}`" + ("" if ok else " (missing)"))
-    lines += ["- [ ] (must) authors, affiliation, sprint dates, track: from checkpoint C5 (tick when filled in report/paper_draft.md)",
-              "- [ ] motivation paragraph, extra papers, leave-outs: from checkpoint C5"]
+    lines += ["- [ ] (must) authors, affiliation, sprint dates, track: in the final paper",
+              "- [ ] motivation paragraph, extra papers, leave-outs: in the final paper"]
     (h / "HANDOFF_CHECKLIST.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     with zipfile.ZipFile(h / "sign-countersign-handoff.zip", "w", zipfile.ZIP_DEFLATED) as z:
         for p in (h / "logs.zip", h / "code.zip", h / "HANDOFF_CHECKLIST.md"):
@@ -692,7 +640,6 @@ def main(argv=None) -> int:
     c.out.mkdir(parents=True, exist_ok=True)
     chosen = write_excerpts(c)
     (c.out / "RESULTS.md").write_text(results_md(c, chosen), encoding="utf-8")
-    (c.out / "paper_draft.md").write_text(paper_md(c), encoding="utf-8")
     (c.out / "references.md").write_text(REFERENCES, encoding="utf-8")
     docs = (ROOT / "docs") if c.out == ROOT / "report" else (c.out / "docs")
     write_docs(c, docs)

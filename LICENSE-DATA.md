@@ -10,7 +10,7 @@ That covers:
 
 - the data: `results/` and `logs/`;
 - the generated tables and figures: `tables/` and `figures/`;
-- the documents: `report/`, `docs/`, `prompts/`, `attack_texts/`, `handoff/HANDOFF_CHECKLIST.md`, and the Markdown files in the top folder.
+- the documents: `report/`, `docs/`, `prompts/`, `attack_texts/`, and the Markdown files in the top folder.
 
 You may share and adapt this material for any purpose, including commercially, provided you give appropriate credit, link to the licence and indicate whether you made changes. Suggested credit: *Ifeanyi Bryan Uzoatu, "Sign and Countersign: Cryptographic Identity Is Necessary but Not Sufficient for Agent Swarms", 2026* (see [CITATION.cff](CITATION.cff)).
 
