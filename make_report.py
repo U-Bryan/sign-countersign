@@ -46,9 +46,15 @@ class Ctx:
 
     def table(self, name: str) -> str:
         p = self.root / "tables" / f"{name}.md"
-        if not p.exists():
-            return f"_(table {name} not produced: no data yet)_"
-        return f"<!--table:{name}-->\n{p.read_text(encoding='utf-8').strip()}\n<!--/table-->"
+        if p.exists():
+            body = p.read_text(encoding="utf-8").strip()
+        else:
+            # Some tables (bench.csv, written by bench.py) have no .md twin: render the CSV.
+            pc = self.root / "tables" / f"{name}.csv"
+            if not pc.exists():
+                return f"_(table {name} not produced: no data yet)_"
+            body = csv_to_md(pc)
+        return f"<!--table:{name}-->\n{body}\n<!--/table-->"
 
     def fig(self, stem: str, caption: str) -> str:
         p = self.root / "figures" / f"{stem}.png"
@@ -56,6 +62,22 @@ class Ctx:
             return f"_(figure {stem} not produced: no data yet)_"
         rel = Path("..") / p.relative_to(self.root) if self.out.parent == self.root else p
         return f"![{caption}]({rel.as_posix()})\n\n*{caption}*"
+
+
+def csv_to_md(p: Path) -> str:
+    """Render a small CSV as a Markdown pipe table."""
+    with open(p, encoding="utf-8", newline="") as f:
+        rows = list(csv.reader(f))
+    if not rows:
+        return ""
+
+    def esc(s: str) -> str:
+        return s.replace("|", "\\|")
+
+    head, body = rows[0], rows[1:]
+    lines = ["| " + " | ".join(esc(h) for h in head) + " |", "|" + "|".join(" --- " for _ in head) + "|"]
+    lines += ["| " + " | ".join(esc(x) for x in r) + " |" for r in body]
+    return "\n".join(lines)
 
 
 def sha256(p: Path) -> str:
@@ -346,26 +368,44 @@ A. Limitations and dual use (docs/LIMITATIONS.md, docs/DUAL_USE.md) · B. Prompt
 
 
 def checklist_md(c: Ctx) -> str:
+    # Each item: (advice, evidence label, [(label, key_before, key_after_or_None), ...]).
+    # Item 7 cites A4-lie and the family-2 A5 column: family 1 resisted every injection (0/90 under
+    # D2 and D3), so its A5 numbers alone show nothing about the monitor.
+    item7 = [("A4-lie, D2 → D3", "asr.core.D2.A4l.fmt", "asr.core.D3.A4l.fmt")]
+    if c.has("headline.f2.A5pooled.D2"):
+        item7.append(("A5 pooled, family 2, D2 → D3", "headline.f2.A5pooled.D2", "headline.f2.A5pooled.D3"))
+    item7.append(("A5 pooled, family 1, D2 → D3 (the model resisted)", "headline.A5pooled.D2", "headline.A5pooled.D3"))
     items = [
-        ("Give each agent its own key; never share one secret across agents.", "asr.core.D1.A4d.fmt", "asr.core.D2.A4d.fmt", "A4-direct: D1 vs D2"),
-        ("Sign every message, covering body, recipient, task ID, nonce and timestamp.", "asr.core.D1.A3.fmt", "asr.core.D2.A3.fmt", "A3: D1 vs D2"),
-        ("Reject replays with a nonce cache and a freshness window.", "asr.core.D1.A2f.fmt", "asr.core.D2.A2f.fmt", "A2-fast: D1 vs D2; E1"),
-        ("Never use a handshake where both sides send the same value; bind responses to the challenge and separate the directions.", "asr.core.D1.A1r.fmt", "asr.core.D2.A1r.fmt", "A1-reflect: D1 vs D2; E4"),
-        ("Publish an authorisation registry: which agent may send which message kinds to whom.", "asr.core.D2.A4d.fmt", None, "A4-direct under D2 (check K6)"),
-        ("Rate-limit and lock out failed handshakes.", "E3.p_attempt", None, "E3: per-guess success probability"),
-        ("Treat authenticated content as untrusted data: gate high-impact actions with an external reference monitor checked against an independent source of truth.", "headline.A5pooled.D2", "headline.A5pooled.D3", "A5 pooled: D2 vs D3; A4-lie"),
-        ("Verify bank-detail changes out of band; a monitor cannot tell a legitimate change from an injected one.", None, None, "E7 (if run)"),
-        ("Keep provenance from the user's task to every action, and re-verify it at the point of action.", None, None, "monitor rule R4"),
-        ("Log every decision with the rule that fired; measure false-rejection rates before deploying.", "cost.D3.frr_fmt", None, "Table 4, Table 6"),
-        ("Set clock tolerance on purpose and measure its cost.", None, None, "E2"),
+        ("Give each agent its own key; never share one secret across agents.", "A4-direct: D1 vs D2",
+         [("", "asr.core.D1.A4d.fmt", "asr.core.D2.A4d.fmt")]),
+        ("Sign every message, covering body, recipient, task ID, nonce and timestamp.", "A3: D1 vs D2",
+         [("", "asr.core.D1.A3.fmt", "asr.core.D2.A3.fmt")]),
+        ("Reject replays with a nonce cache and a freshness window.", "A2-fast: D1 vs D2; E1",
+         [("", "asr.core.D1.A2f.fmt", "asr.core.D2.A2f.fmt")]),
+        ("Never use a handshake where both sides send the same value; bind responses to the challenge and separate the directions.",
+         "A1-reflect: D1 vs D2; E4", [("", "asr.core.D1.A1r.fmt", "asr.core.D2.A1r.fmt")]),
+        ("Publish an authorisation registry: which agent may send which message kinds to whom.", "A4-direct under D2 (check K6)",
+         [("", "asr.core.D2.A4d.fmt", None)]),
+        ("Rate-limit and lock out failed handshakes.", "E3: per-guess success probability", [("", "E3.p_attempt", None)]),
+        ("Treat authenticated content as untrusted data: gate high-impact actions with an external reference monitor checked against an independent source of truth.",
+         "A4-lie and A5: D2 vs D3", item7),
+        ("Verify bank-detail changes out of band; a monitor cannot tell a legitimate change from an injected one.",
+         "design of monitor rule R1 (E7 not run, so not measured)", []),
+        ("Keep provenance from the user's task to every action, and re-verify it at the point of action.", "monitor rule R4", []),
+        ("Log every decision with the rule that fired; measure false-rejection rates before deploying.", "Table 4, Table 6",
+         [("", "cost.D3.frr_fmt", None)]),
+        ("Set clock tolerance on purpose and measure its cost.", "E2 (Table E2, Figure E2)", []),
     ]
     lines = ["# Minimum identity checklist for A2A deployments", "",
              "One page. Each item names the experimental evidence behind it. Mappings to A2A protocol features are marked "
              f"{VERIFY} until checked against the current A2A specification.", "",
              "| # | Do this | Evidence | Numbers | A2A feature |", "| --- | --- | --- | --- | --- |"]
-    for i, (text, k1, k2, ev) in enumerate(items, 1):
-        nums = " → ".join(c.v(k) for k in (k1, k2) if k) if k1 else "-"
-        lines.append(f"| {i} | {text} | {ev} | {nums} | {VERIFY} |")
+    for i, (text, ev, parts) in enumerate(items, 1):
+        shown = []
+        for label, k1, k2 in parts:
+            nums = " → ".join(c.v(k) for k in (k1, k2) if k)
+            shown.append(f"{label}: {nums}" if label else nums)
+        lines.append(f"| {i} | {text} | {ev} | {'; '.join(shown) if shown else '-'} | {VERIFY} |")
     return "\n".join(lines) + "\n"
 
 

@@ -1,6 +1,6 @@
 # Handoff checklist (source plan, Part 2)
 
-Generated 2026-11-06T21:23:39+00:00.
+Generated 2026-11-07T07:12:19+00:00.
 
 - [x] (must) results/results.csv: `results/results.csv`
 - [x] (must) logs folder, zipped: `handoff/logs.zip`

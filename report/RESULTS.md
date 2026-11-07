@@ -105,7 +105,17 @@ Full matrix with 95% Wilson intervals:
 
 Microbenchmarks of the primitives:
 
-_(table bench not produced: no data yet)_
+<!--table:bench-->
+| primitive | n | median_us | p95_us | mean_us | machine |
+| --- | --- | --- | --- | --- | --- |
+| totp_code | 10000 | 5.8 | 6.2 | 5.82 | Intel64 Family 6 Model 197 Stepping 2, GenuineIntel \| Windows 11 \| Python 3.13.15 |
+| totp_verify_window1 | 10000 | 11.9 | 15.1 | 12.95 | Intel64 Family 6 Model 197 Stepping 2, GenuineIntel \| Windows 11 \| Python 3.13.15 |
+| d1_full_handshake_4_messages | 1000 | 183.35 | 243.3 | 199.71 | Intel64 Family 6 Model 197 Stepping 2, GenuineIntel \| Windows 11 \| Python 3.13.15 |
+| ed25519_sign | 10000 | 18.7 | 21.0 | 19.89 | Intel64 Family 6 Model 197 Stepping 2, GenuineIntel \| Windows 11 \| Python 3.13.15 |
+| ed25519_verify | 10000 | 50.0 | 58.2 | 54.33 | Intel64 Family 6 Model 197 Stepping 2, GenuineIntel \| Windows 11 \| Python 3.13.15 |
+| d2_sign_plus_full_verify_K1_K6 | 10000 | 83.1 | 115.9 | 90.53 | Intel64 Family 6 Model 197 Stepping 2, GenuineIntel \| Windows 11 \| Python 3.13.15 |
+| monitor_full_check_R1_R4 | 10000 | 67.7 | 98.7 | 73.74 | Intel64 Family 6 Model 197 Stepping 2, GenuineIntel \| Windows 11 \| Python 3.13.15 |
+<!--/table-->
 
 ![Figure 5. Protection against cost: mean ASR across the 10 attack columns vs false-rejection rate.](../figures/fig5_cost_tradeoff.png)
 
@@ -571,4 +581,4 @@ Honest-run costs, family 2:
 - git commit: `459bc7ca3490d13c78cfe1555f72f2148cb7ebec`
 - config SHA-256: `ba1c174564978c425a46c9c7ba2406c4983221ec92ed84f8b87a0dc70926d1c4`
 - prompt SHA-256: `35b2e5c8cf18fffb598a78f847bf67ff20355bb0fa62fedc3d8239080da3a420`
-- generated: 2026-11-06T21:23:33+00:00
+- generated: 2026-11-07T07:10:24+00:00
