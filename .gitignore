@@ -24,3 +24,7 @@ results/progress.log
 results/*.out
 results/*.err
 handoff/*.zip
+
+# Report-writing pack (rebuilt by scripts/make_report_pack.py) and the author's local copy of the sprint plan
+handoff/report_pack/
+handoff/SOURCE_PLAN.md

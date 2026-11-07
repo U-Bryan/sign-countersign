@@ -1,7 +1,7 @@
 # PROGRESS: Sign and Countersign
 
-Last updated: 2026-11-06 by Claude Code
-Current phase: 8 (report built; waiting for human inputs) | Next step: C5 inputs (authors, affiliation, sprint dates, motivation, papers, leave-outs) -> fill report/paper_draft.md -> C6 (GitHub remote + make public) -> tag submission | Blocked on: C5, C6
+Last updated: 2026-11-07 by Claude Code
+Current phase: 8 (report built; waiting for human inputs) | Next step: C5 inputs (authors, affiliation, sprint dates, motivation, papers, leave-outs) -> fill REPORT_BRIEF.md Section 1 -> rebuild the pack (scripts/make_report_pack.py) -> Claude writes report/PAPER.md -> C6 (GitHub remote + make public) -> tag submission | Blocked on: C5, C6
 
 | Phase | Status (TODO / IN PROGRESS / DONE) | Gate result | Commit / tag | Notes |
 | --- | --- | --- | --- | --- |
@@ -13,7 +13,7 @@ Current phase: 8 (report built; waiting for human inputs) | Next step: C5 inputs
 | 5 Pilot | DONE | 210 + 76 pilot trials, audit 100%, logs read (docs/PILOT_AUDIT.md), cost estimate, C3 approved | 459bc7c, f06c3d3 | |
 | 6 Main runs | DONE | PASS (gates.py 6): 2,730 trials, 0 errors, audit 100% | 296c15a, tag main-run-complete | total API spend $4.01 (all phases) |
 | 7 Analysis | DONE | PASS (gates.py 7): deterministic, all figures checked by eye | b29e7e8 | 27 tables, 16 figures |
-| 8 Report + handoff | IN PROGRESS | final QA: fresh clone `reproduce.py` exit 0, all 30 tables + values.json byte-identical; no [MISSING]; secret scan PASS; prereg and prompts unchanged since tags; handoff complete except C5 items | b29e7e8 | waiting for C5 (author details) and C6 (GitHub) |
+| 8 Report + handoff | IN PROGRESS | final QA: fresh clone `reproduce.py` exit 0, all tables + values.json byte-identical (30 tables at 5a76233; re-checked at f3f772a after the generator fixes: 31 tables); no [MISSING]; secret scan PASS; prereg and prompts unchanged since tags; handoff complete except C5 items | b29e7e8, 5a76233, 7fa7e02, f3f772a | waiting for C5 (author details) and C6 (GitHub); report-writing brief ready (REPORT_BRIEF.md) |
 
 ## Checkpoints
 C1 keys: DONE for family 1 (Anthropic key works); family 2 deferred: OpenAI key valid but account has no credits (429 insufficient quota) · C2 GitHub: local repo created (git installed via winget 2026-11-06); no remote yet · C3 tiers approved: T1, T2 (ablations now; family2 when the human adds OpenAI credits), T3 E4, E5, E6 (2026-11-06) · C4: - · C5 inputs: - · C6 publish: -
@@ -44,8 +44,8 @@ Family 2 enabled 2026-11-06 after the human added OpenAI credits (model check OK
 - Gate markers: C-3 A5b, C-3 A5p, C-3 A5d (documented as above).
 
 ## Open issues
-- Git is not installed. Needed before any live attack trial (tags prereg-v1, prompts-v1) and for commits. Human: `winget install --id Git.Git -e`, then restart VS Code.
-- OpenAI account has no credits (family 2, Tier 2 only). Human: add credits at platform.openai.com billing if the second family is wanted.
+- (Resolved 2026-11-06) Git was not installed; installed with winget before any live attack trial.
+- (Resolved 2026-11-06) The OpenAI account had no credits; the human added credits and family 2 ran.
 - The keys were in `.env.txt` (Notepad added .txt); renamed to `.env` (git-ignored) on 2026-11-06; values never displayed. .gitignore now also covers `.env.*`.
 - GitHub CLI (gh) not installed (optional, C2).
 
@@ -56,3 +56,5 @@ Family 2 enabled 2026-11-06 after the human added OpenAI credits (model check OK
 - 2026-11-06 Seed rule uses a per-experiment offset (no seed collisions across experiments); recorded in PREREGISTRATION.md before data.
 - 2026-11-06 Verdict rules made operational before data (see docs/DEVIATIONS.md).
 - 2026-11-06 Figures use the dataviz skill's validated default palette unchanged (sequential blue for ASR; categorical slots in fixed order with marker shapes as secondary encoding).
+- 2026-11-07 Report generator fixes (no data or rule changed): RESULTS.md renders the microbenchmark table (bench.csv) and Table E2; checklist item 7 cites A4-lie and family-2 A5 instead of the vacuous family-1 A5; analyse.py adds Table 2d (ablation ASR with Wilson intervals, the numbers behind fig2b) and asr.ablation.* values.
+- 2026-11-07 Report writing: REPORT_BRIEF.md instructs Claude how to write the paper; scripts/make_report_pack.py builds handoff/report_pack/ (git-ignored) with the files to upload. The final paper goes to report/PAPER.md, because make_report.py regenerates report/paper_draft.md.

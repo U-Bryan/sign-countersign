@@ -324,6 +324,8 @@ def results_md(c: Ctx, chosen: dict) -> str:
 def paper_md(c: Ctx) -> str:
     return f"""# Sign and Countersign: Cryptographic Identity Is Necessary but Not Sufficient for Agent Swarms
 
+_Generated skeleton: `make_report.py` overwrites this file on every run. Write the final paper in `report/PAPER.md`; the instructions are in `REPORT_BRIEF.md`._
+
 [TO FILL: authors] · [TO FILL: affiliation, e.g. University of Bristol, EPSRC CDT in Cyber Security] · Swarm Alignment Sprint, Track 3 (Strengthening Agent Infrastructure), [TO FILL: sprint dates]
 
 ## Abstract (write last; claim no more than Table 10 supports)
