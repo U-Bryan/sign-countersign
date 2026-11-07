@@ -72,8 +72,7 @@ def main(argv=None) -> int:
                      f"{r.get('input_tokens', '-')}/{r.get('output_tokens', '-')} | {r.get('latency_ms', '-')} | {note} |")
     for r in results:
         if "mini_models_available" in r:
-            lines += ["", f"Configured OpenAI model listed: {r.get('configured_model_listed')}.",
-                      "Available *-mini models: " + ", ".join(r["mini_models_available"])]
+            lines += ["", f"Configured OpenAI model listed: {r.get('configured_model_listed')}."]
     path = ROOT / "docs" / "MODEL_CHECK.md"
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(json.dumps(results, indent=1, default=str))

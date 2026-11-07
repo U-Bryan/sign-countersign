@@ -16,9 +16,9 @@ Current phase: 8 (published; final paper edits pending) | Next step: apply the f
 | 8 Report + handoff | IN PROGRESS | final QA: fresh clone `reproduce.py` exit 0, all tables + values.json byte-identical (30 tables at 5a76233; re-checked at f3f772a after the generator fixes: 31 tables); no [MISSING]; secret scan PASS; prereg and prompts unchanged since tags; handoff complete except C5 items | b29e7e8, 5a76233, 7fa7e02, f3f772a | waiting for C5 (author details) and C6 (GitHub); report-writing brief ready (REPORT_BRIEF.md) |
 
 ## Checkpoints
-C1 keys: DONE for family 1 (Anthropic key works); family 2 deferred: OpenAI key valid but account has no credits (429 insufficient quota) · C2 GitHub: local repo created (git installed via winget 2026-11-06); no remote yet · C3 tiers approved: T1, T2 (ablations now; family2 when the human adds OpenAI credits), T3 E4, E5, E6 (2026-11-06) · C4: - · C5 inputs: partial (2026-11-07): author Bryan Uzoatu, PhD Researcher in Cyber Security, University of Bristol; licences MIT (code) and CC BY 4.0 (data, documents); leave-outs: personal email and local file paths (removed). Still open: sprint dates, motivation paragraph, extra papers · C6 publish: DONE 2026-11-07, public at https://github.com/U-Bryan/sign-countersign (tags prereg-v1, prompts-v1, main-run-complete pushed; tag submission to follow with the final paper)
+C1 keys: DONE (both providers; family 2 was enabled later the same day) · C2 GitHub: local repo created (git installed via winget 2026-11-06); no remote yet · C3 tiers approved: T1, T2 (ablations now; family2 once the second provider was ready), T3 E4, E5, E6 (2026-11-06) · C4: - · C5 inputs: partial (2026-11-07): author Bryan Uzoatu, PhD Researcher in Cyber Security, University of Bristol; licences MIT (code) and CC BY 4.0 (data, documents); leave-outs: personal email and local file paths (removed). Still open: sprint dates, motivation paragraph, extra papers · C6 publish: DONE 2026-11-07, public at https://github.com/U-Bryan/sign-countersign (tags prereg-v1, prompts-v1, main-run-complete pushed; tag submission to follow with the final paper)
 
-Family 2 enabled 2026-11-06 after the human added OpenAI credits (model check OK, honest pilot 10/10). The analysis treats family 2 as a pre-registered T2 replication of the A5 column: same verdict rules, its own Holm family, reported separately (never pooled).
+Family 2 enabled 2026-11-06 (model check OK, honest pilot 10/10). The analysis treats family 2 as a pre-registered T2 replication of the A5 column: same verdict rules, its own Holm family, reported separately (never pooled).
 
 ## Offline evidence so far
 - Full offline suite: `pytest -m "not live"` (see last run in the session; all passing).
@@ -29,8 +29,8 @@ Family 2 enabled 2026-11-06 after the human added OpenAI credits (model check OK
 ## Background runs
 | Started | Command | Output file | Status |
 | --- | --- | --- | --- |
-| 2026-11-06 19:24 local (PID 1632) | `scripts\run_main.py honest core ablation ext-E4 ext-E5 ext-E6` | results\run_main.out / .err, results\progress.log | DONE 21:18, 2,250 trials, 0 errors |
-| 2026-11-06 ~19:45 local (PID 36492) | `scripts\run_main.py family2` | results\run_family2.out / .err, results\progress.log | DONE 20:19, 480 trials, 0 errors. Credits added by the human; model check OK (gpt-5-mini-2025-08-07); family-2 honest pilot D0 10/10; family-2 pilot: A5 3/3 per variant under D0, D1, D2 and 0/3 under D3 (blocked by R1); honest 10/10 under every defence |
+| 2026-11-06 19:24 local | `scripts\run_main.py honest core ablation ext-E4 ext-E5 ext-E6` | results\run_main.out / .err, results\progress.log | DONE 21:18, 2,250 trials, 0 errors |
+| 2026-11-06 ~19:45 local | `scripts\run_main.py family2` | results\run_family2.out / .err, results\progress.log | DONE 20:19, 480 trials, 0 errors. Model check OK (gpt-5-mini-2025-08-07); family-2 honest pilot D0 10/10; family-2 pilot: A5 3/3 per variant under D0, D1, D2 and 0/3 under D3 (blocked by R1); honest 10/10 under every defence |
 
 ## Live results so far (pilot phase, family 1, results/pilot/)
 - Honest pilot: 40 trials (10 tasks x D0-D3): 40/40 completed correctly, 0 false rejections, 0 parse failures, 0 refusals, $0.0303 total, median ~9 s per task.
@@ -45,8 +45,8 @@ Family 2 enabled 2026-11-06 after the human added OpenAI credits (model check OK
 
 ## Open issues
 - (Resolved 2026-11-06) Git was not installed; installed with winget before any live attack trial.
-- (Resolved 2026-11-06) The OpenAI account had no credits; the human added credits and family 2 ran.
-- The keys were in `.env.txt` (Notepad added .txt); renamed to `.env` (git-ignored) on 2026-11-06; values never displayed. .gitignore now also covers `.env.*`.
+- (Resolved 2026-11-06) Family 2 could not run at first because of an API account issue; it was fixed and family 2 ran.
+- (Resolved 2026-11-06) The API-key file was renamed to the git-ignored `.env`; .gitignore also covers `.env.*`. No key was ever committed.
 - GitHub CLI (gh) not installed (optional, C2).
 
 ## Decisions log (one line each)
