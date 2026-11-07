@@ -344,7 +344,9 @@ def results_md(c: Ctx, chosen: dict) -> str:
               "## Errors and exclusions", "", c.table("table9_errors"), "",
               "## Provenance", "",
               f"- results CSV: `{res.name}`, SHA-256 `{sha256(res)}`",
-              f"- git commit: `{c.rows[0].get('git_sha') if c.rows else 'n/a'}`",
+              "- git commits recorded by the trials: " + (", ".join(f"`{s}`" for s in sorted({r.get("git_sha", "") for r in c.rows} - {""})) or "n/a")
+              + (" (IDs from before the history rewrite; `docs/COMMIT_MAP.md` gives the current IDs)"
+                 if (ROOT / "docs" / "COMMIT_MAP.md").exists() else ""),
               f"- config SHA-256: `{c.rows[0].get('config_sha') if c.rows else 'n/a'}`",
               f"- prompt SHA-256: `{c.rows[0].get('prompt_sha') if c.rows else 'n/a'}`",
               f"- generated: {datetime.now(timezone.utc).isoformat(timespec='seconds')}"]
