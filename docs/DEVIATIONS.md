@@ -27,6 +27,8 @@ Every difference from the source plan ("Swarm Alignment Sprint: Experiment Runbo
 | 2026-11-06 | D1 handshake messages bypass the agents: the transport answers them (`defences/d1_totp.py`). The LLM never sees codes or secrets. |
 | 2026-11-06 | Verdict rules (PREREGISTRATION.md §10.4) made fully operational before any data: "stops" claims count a column as supported when both defences are 0/n (already stopped by an earlier layer); "> 0" claims use k ≥ 1; H7 thresholds spelled out. The runbook's single-sentence rule could not mark H4 supported when D1 already stops A1-guess and A2-slow. |
 | 2026-11-06 | RUNBOOK 8.5 typo fixed: the Wilson interval for 15/30 is [0.3315, 0.6685], not [0.3313, 0.6687] (checked against statsmodels). |
+| 2026-11-07 | The comment on `seed_base` in `config/experiment.toml` shows the seed formula before the per-experiment offset was added. The rule actually used is the one in PREREGISTRATION.md section 6. The comment is left unchanged on purpose: the file's SHA-256 is recorded in every results row, so editing it would break that link. |
+| 2026-11-07 | Before the repository was made public, its git history was rewritten to remove the author's personal email address (replaced with a GitHub no-reply address) and a local folder path in RUNBOOK.md. No other file content changed. Commit IDs changed as a result. The IDs recorded before that date (in `results/results.csv`, `results/run_manifest.json`, `report/RESULTS.md` and `PROGRESS.md`) are mapped to the new IDs in `docs/COMMIT_MAP.md`. |
 
 ## Deviations during the study
 

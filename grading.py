@@ -6,7 +6,6 @@ from __future__ import annotations
 
 import json
 import statistics
-import subprocess
 from datetime import datetime, timezone
 from functools import lru_cache
 from pathlib import Path

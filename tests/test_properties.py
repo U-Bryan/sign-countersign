@@ -1,11 +1,9 @@
 """Property-based tests (hypothesis): any single-field change breaks a D2 signature."""
-import copy
 
 import pytest
 from hypothesis import HealthCheck, given, settings
 from hypothesis import strategies as st
 
-from bus import Accept, Reject
 from message import Message, canonical_bytes
 from monitor import independent_signature_check
 from tests.helpers import Env

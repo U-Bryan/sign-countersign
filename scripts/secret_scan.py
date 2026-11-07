@@ -12,7 +12,6 @@ Usage: .venv\\Scripts\\python.exe scripts/secret_scan.py   (exit code 1 on any f
 from __future__ import annotations
 
 import re
-import subprocess
 import sys
 from pathlib import Path
 

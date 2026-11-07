@@ -15,7 +15,6 @@ import argparse
 import csv
 import hashlib
 import json
-import shutil
 import sys
 import textwrap
 import zipfile
@@ -24,7 +23,8 @@ from pathlib import Path
 
 from config import ROOT, load_config
 
-VERIFY = "[VERIFY]"
+AUTHOR = "Bryan Uzoatu"
+AFFILIATION = "PhD Researcher in Cyber Security, University of Bristol"
 
 
 class Ctx:
@@ -256,18 +256,48 @@ def surprises(c: Ctx) -> list[str]:
     from oracle_table import ORACLE_TABLE
     out = []
     V = c.values
+    # Each comment is chosen by the data, so the wording stays true if the numbers change.
     for d in ("D0", "D1", "D2", "D3"):
         for col, o in ORACLE_TABLE[d].items():
             k = f"asr.core.{d}.{col}.p"
             if k in V and abs(V[k] - o) > 0.30:
-                out.append(f"{col} under {d}: LLM ASR {c.v(f'asr.core.{d}.{col}.fmt')} vs protocol-level {'through' if o else 'stopped'}. [TO FILL: comment]")
-    for key, label in (("asr.core.D1.A2f.fmt", "A2-fast under D1"), ("asr.core.D1.A1r.fmt", "A1-reflect under D1"),
-                       ("asr.core.D2.A4l.fmt", "A4-lie under D2")):
-        if key in V:
-            out.append(f"{label}: {c.v(key)}. [TO FILL: comment]")
+                s = f"{col} under {d}: LLM ASR {c.v(f'asr.core.{d}.{col}.fmt')} vs protocol-level {'through' if o else 'stopped'}. "
+                if o and V[k] < o:
+                    s += ("Model-level resistance: the protocol lets this attack through (oracle), but the family-1 agents "
+                          "did not carry it out. The defence did not stop it.")
+                    if f"asr.family2.{d}.{col}.fmt" in V:
+                        s += f" Family 2 under the same defence: {c.v(f'asr.family2.{d}.{col}.fmt')}."
+                else:
+                    s += "The attack succeeded where the protocol should stop it; check the logs of this cell."
+                out.append(s)
+    if "asr.core.D1.A2f.p" in V:
+        s = f"A2-fast under D1: {c.v('asr.core.D1.A2f.fmt')}. "
+        s += ("A TOTP code stays valid for its whole acceptance window and nothing binds it to the request, so an unchanged "
+              "replay inside the window reopens a channel (Figure E1)." if V["asr.core.D1.A2f.p"] > 0
+              else "The handshake stopped a replay inside the code's validity window.")
+        out.append(s)
+    if "asr.core.D1.A1r.p" in V:
+        s = f"A1-reflect under D1: {c.v('asr.core.D1.A1r.fmt')}. "
+        if V["asr.core.D1.A1r.p"] > 0:
+            s += "The receiver reveals the same code the caller must send back, so an outsider can reflect it."
+            if "asr.ablation.D1fix.A1r.fmt" in V:
+                s += f" Direction-separated codes (D1fix, extension E4): {c.v('asr.ablation.D1fix.A1r.fmt')}."
+        else:
+            s += "No reflection succeeded."
+        out.append(s)
+    if "asr.core.D2.A4l.p" in V:
+        s = f"A4-lie under D2: {c.v('asr.core.D2.A4l.fmt')}. "
+        if V["asr.core.D2.A4l.p"] > 0:
+            s += "Per-agent keys limit what a stolen key can order"
+            s += f" (A4-direct under D2: {c.v('asr.core.D2.A4d.fmt')})" if "asr.core.D2.A4d.fmt" in V else ""
+            s += ", not what it can say: the signed lie is accepted"
+            s += f"; the monitor's account-on-file rule stops it (D3: {c.v('asr.core.D3.A4l.fmt')})." if "asr.core.D3.A4l.fmt" in V else "."
+        else:
+            s += "The stolen-key lie did not succeed."
+        out.append(s)
     for d in ("D0", "D1", "D2", "D3"):
         if V.get(f"cost.{d}.frr", 0) > 0:
-            out.append(f"Non-zero FRR under {d}: {c.v(f'cost.{d}.frr_fmt')}. See docs/FALSE_REJECTIONS.md. [TO FILL: comment]")
+            out.append(f"Non-zero FRR under {d}: {c.v(f'cost.{d}.frr_fmt')}. Each case is listed in docs/FALSE_REJECTIONS.md.")
     return out
 
 
@@ -326,7 +356,7 @@ def paper_md(c: Ctx) -> str:
 
 _Generated skeleton: `make_report.py` overwrites this file on every run. Write the final paper in `report/PAPER.md`; the instructions are in `REPORT_BRIEF.md`._
 
-[TO FILL: authors] · [TO FILL: affiliation, e.g. University of Bristol, EPSRC CDT in Cyber Security] · Swarm Alignment Sprint, Track 3 (Strengthening Agent Infrastructure), [TO FILL: sprint dates]
+{AUTHOR} · {AFFILIATION} · Swarm Alignment Sprint, Track 3 (Strengthening Agent Infrastructure), [TO FILL: sprint dates]
 
 ## Abstract (write last; claim no more than Table 10 supports)
 
@@ -334,11 +364,11 @@ _Generated skeleton: `make_report.py` overwrites this file on every run. Write t
 
 ## 1 Introduction (0.75 page)
 
-[TO FILL: motivation in your own words: the soldier and countersign story.] Agent-to-agent protocols such as A2A {VERIFY} let agents act on each other's messages. We ask which attacks on that messaging each layer of identity defence stops, and which get past every cryptographic layer. Contributions: (1) a ground-truth testbed where success is read from a ledger, not from model text; (2) a 4 × 10 attack matrix with pre-registered success rules and 30 trials per cell; (3) a protocol-level oracle that separates what each protocol lets through from what the models resist; (4) a reusable attack suite and a minimum identity checklist for A2A deployments.
+[TO FILL: motivation in your own words: the soldier and countersign story.] Agent-to-agent protocols such as A2A let agents act on each other's messages. We ask which attacks on that messaging each layer of identity defence stops, and which get past every cryptographic layer. Contributions: (1) a ground-truth testbed where success is read from a ledger, not from model text; (2) a 4 × 10 attack matrix with pre-registered success rules and 30 trials per cell; (3) a protocol-level oracle that separates what each protocol lets through from what the models resist; (4) a reusable attack suite and a minimum identity checklist for A2A deployments.
 
 ## 2 Related work (0.5 page)
 
-Agent identity (Chan et al., IDs for AI Systems {VERIFY}); prompt injection between agents (Lee & Tiwari, Prompt Infection {VERIFY}; Greshake et al. {VERIFY}); AI control (Greenblatt et al. {VERIFY}); CaMeL-style system security (Debenedetti et al. {VERIFY}). Security protocols: TOTP (RFC 6238), Ed25519 (RFC 8032), TLS 1.3 (RFC 8446), Kerberos (RFC 4120), the Needham–Schroeder relay flaw (Lowe, 1996 {VERIFY}), reflection attacks on symmetric challenge–response, and the confused deputy (Hardy, 1988). [TO FILL: 3–4 sentences positioning the work.]
+Agent identity (Chan et al., IDs for AI Systems); prompt injection between agents (Lee & Tiwari, Prompt Infection; Greshake et al.); AI control (Greenblatt et al.); CaMeL-style system security (Debenedetti et al.). Security protocols: TOTP (RFC 6238), Ed25519 (RFC 8032), TLS 1.3 (RFC 8446), Kerberos (RFC 4120), the Needham–Schroeder relay flaw (Lowe, 1996), reflection attacks on symmetric challenge–response, and the confused deputy (Hardy, 1988). [TO FILL: 3–4 sentences positioning the work.]
 
 ## 3 Threat model and setup (1.5 pages)
 
@@ -378,37 +408,56 @@ def checklist_md(c: Ctx) -> str:
     if c.has("headline.f2.A5pooled.D2"):
         item7.append(("A5 pooled, family 2, D2 → D3", "headline.f2.A5pooled.D2", "headline.f2.A5pooled.D3"))
     item7.append(("A5 pooled, family 1, D2 → D3 (the model resisted)", "headline.A5pooled.D2", "headline.A5pooled.D3"))
+    # The A2A column was checked against the A2A specification v1.0.0 (https://a2a-protocol.org/latest/specification/,
+    # read 2026-11-07). Section numbers refer to that version.
     items = [
         ("Give each agent its own key; never share one secret across agents.", "A4-direct: D1 vs D2",
-         [("", "asr.core.D1.A4d.fmt", "asr.core.D2.A4d.fmt")]),
+         [("", "asr.core.D1.A4d.fmt", "asr.core.D2.A4d.fmt")],
+         "Supported: each agent declares its own authentication in its Agent Card (`securitySchemes`, `security`; "
+         "API key, HTTP auth, OAuth 2.0, OpenID Connect or mutual TLS, §4.5), and Agent Cards can be signed with JWS (§8.4). "
+         "Issue separate credentials per agent."),
         ("Sign every message, covering body, recipient, task ID, nonce and timestamp.", "A3: D1 vs D2",
-         [("", "asr.core.D1.A3.fmt", "asr.core.D2.A3.fmt")]),
+         [("", "asr.core.D1.A3.fmt", "asr.core.D2.A3.fmt")],
+         "Not specified: v1.0 requires TLS on every hop (§7.1) and signs only Agent Cards (§8.4). End-to-end message "
+         "signatures would need an extension (`AgentExtension`, §4.4.4)."),
         ("Reject replays with a nonce cache and a freshness window.", "A2-fast: D1 vs D2; E1",
-         [("", "asr.core.D1.A2f.fmt", "asr.core.D2.A2f.fmt")]),
+         [("", "asr.core.D1.A2f.fmt", "asr.core.D2.A2f.fmt")],
+         "Not specified: no nonce or timestamp check. Agents MAY use `messageId` to detect duplicate messages."),
         ("Never use a handshake where both sides send the same value; bind responses to the challenge and separate the directions.",
-         "A1-reflect: D1 vs D2; E4", [("", "asr.core.D1.A1r.fmt", "asr.core.D2.A1r.fmt")]),
+         "A1-reflect: D1 vs D2; E4", [("", "asr.core.D1.A1r.fmt", "asr.core.D2.A1r.fmt")],
+         "Avoided by the standard schemes (OAuth 2.0, mutual TLS), which use distinct credentials per party. Matters for "
+         "any custom scheme added on top."),
         ("Publish an authorisation registry: which agent may send which message kinds to whom.", "A4-direct under D2 (check K6)",
-         [("", "asr.core.D2.A4d.fmt", None)]),
-        ("Rate-limit and lock out failed handshakes.", "E3: per-guess success probability", [("", "E3.p_attempt", None)]),
+         [("", "asr.core.D2.A4d.fmt", None)],
+         "Left to each server: it authorises requests from the authenticated identity under its own policies (§7.5). "
+         "The spec defines no shared registry."),
+        ("Rate-limit and lock out failed handshakes.", "E3: per-guess success probability", [("", "E3.p_attempt", None)],
+         "Not specified."),
         ("Treat authenticated content as untrusted data: gate high-impact actions with an external reference monitor checked against an independent source of truth.",
-         "A4-lie and A5: D2 vs D3", item7),
+         "A4-lie and A5: D2 vs D3", item7,
+         "Not specified: the spec gives no guidance on treating other agents' content as untrusted. Add it in the deployment."),
         ("Verify bank-detail changes out of band; a monitor cannot tell a legitimate change from an injected one.",
-         "design of monitor rule R1 (E7 not run, so not measured)", []),
-        ("Keep provenance from the user's task to every action, and re-verify it at the point of action.", "monitor rule R4", []),
+         "design of monitor rule R1 (E7 not run, so not measured)", [],
+         "Outside the protocol. The auth-required task state (§7.6) can pause a task while a person confirms."),
+        ("Keep provenance from the user's task to every action, and re-verify it at the point of action.", "monitor rule R4", [],
+         "Partly: server-generated `taskId` and `contextId` link messages to a task; re-verifying provenance at the point "
+         "of action is not specified."),
         ("Log every decision with the rule that fired; measure false-rejection rates before deploying.", "Table 4, Table 6",
-         [("", "cost.D3.frr_fmt", None)]),
-        ("Set clock tolerance on purpose and measure its cost.", "E2 (Table E2, Figure E2)", []),
+         [("", "cost.D3.frr_fmt", None)], "Not specified."),
+        ("Set clock tolerance on purpose and measure its cost.", "E2 (Table E2, Figure E2)", [],
+         "Not specified (the spec has no timestamp check). Applies to any freshness window you add."),
     ]
     lines = ["# Minimum identity checklist for A2A deployments", "",
-             "One page. Each item names the experimental evidence behind it. Mappings to A2A protocol features are marked "
-             f"{VERIFY} until checked against the current A2A specification.", "",
-             "| # | Do this | Evidence | Numbers | A2A feature |", "| --- | --- | --- | --- | --- |"]
-    for i, (text, ev, parts) in enumerate(items, 1):
+             "One page. Each item names the experimental evidence behind it. The A2A column was checked against the "
+             "Agent2Agent (A2A) Protocol Specification, version 1.0.0 (https://a2a-protocol.org/latest/specification/, "
+             "read 7 November 2026); section numbers refer to that version.", "",
+             "| # | Do this | Evidence | Numbers | A2A v1.0.0 |", "| --- | --- | --- | --- | --- |"]
+    for i, (text, ev, parts, a2a) in enumerate(items, 1):
         shown = []
         for label, k1, k2 in parts:
             nums = " → ".join(c.v(k) for k in (k1, k2) if k)
             shown.append(f"{label}: {nums}" if label else nums)
-        lines.append(f"| {i} | {text} | {ev} | {'; '.join(shown) if shown else '-'} | {VERIFY} |")
+        lines.append(f"| {i} | {text} | {ev} | {'; '.join(shown) if shown else '-'} | {a2a} |")
     return "\n".join(lines) + "\n"
 
 
@@ -430,28 +479,35 @@ LIMITATIONS = """# Limitations
 - 30 trials per cell: intervals are wide, and "no significant difference" is not equivalence.
 - Messages are A2A-shaped but this is not the A2A protocol itself.
 - Fixed prompts and three injection texts; other phrasings may behave differently.
-- [TO FILL: anything found during the runs.]
+- Found during the runs: the family-1 agents (claude-haiku-5-5) resisted every injection, including the pilot's escalation ladder, so the claim that insiders get past cryptographic identity rests on the family-2 replication (A5) and on A4-lie, not on family 1.
+- Each model was run in one configuration (one prompt set, default sampling, medium effort). The difference between the families is not a general comparison of the two models.
+- Extensions E7 (legitimate bank-detail changes, to measure monitor false rejections on edge cases) and E8 (an LLM-based monitor) were not run.
+- Blocking a fraudulent payment also stops the honest task (denial of service). This is recorded per trial but not tabulated.
+- API costs are estimates: token counts multiplied by per-token prices that were not re-checked against the providers' price lists.
+- The reproduction pipeline was tested on Windows only.
 """
 
-REFERENCES = """# References (check every entry before use; never invent a citation)
+REFERENCES = """# References
 
-1. Agent2Agent (A2A) Protocol specification. [VERIFY: version, URL]
-2. Chan, A. et al. IDs for AI Systems. [VERIFY: year, venue/URL]
-3. Lee, D. and Tiwari, M. Prompt Infection: LLM-to-LLM Prompt Injection within Multi-Agent Systems. [VERIFY: year, URL]
-4. Greenblatt, R. et al. AI Control: Improving Safety Despite Intentional Subversion. [VERIFY: year, venue]
-5. Debenedetti, E. et al. Defeating Prompt Injections by Design (CaMeL). [VERIFY: year, URL]
-6. Greshake, K. et al. Not what you've signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection. [VERIFY: year, venue]
-7. OWASP Top 10 for LLM Applications (LLM01: Prompt Injection). [VERIFY: version, URL]
+Entries 1–7 and 13 were checked against their sources on 7 November 2026. Never add a citation without checking it.
+
+1. A2A Project. Agent2Agent (A2A) Protocol Specification, version 1.0.0. https://a2a-protocol.org/latest/specification/ (accessed 7 November 2026).
+2. Chan, A. et al. IDs for AI Systems. arXiv:2406.12137, 2024. NeurIPS 2024 Workshop on Regulatable ML.
+3. Lee, D. and Tiwari, M. Prompt Infection: LLM-to-LLM Prompt Injection within Multi-Agent Systems. arXiv:2410.07283, 2024.
+4. Greenblatt, R., Shlegeris, B., Sachan, K. and Roger, F. AI Control: Improving Safety Despite Intentional Subversion. Proceedings of the 41st International Conference on Machine Learning (ICML), PMLR 235:16295–16336, 2024. arXiv:2312.06942.
+5. Debenedetti, E. et al. Defeating Prompt Injections by Design. arXiv:2503.18813, 2025.
+6. Greshake, K., Abdelnabi, S., Mishra, S., Endres, C., Holz, T. and Fritz, M. Not What You've Signed Up For: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection. Proceedings of the 16th ACM Workshop on Artificial Intelligence and Security (AISec '23), pp. 79–90, 2023. doi:10.1145/3605764.3623985. arXiv:2302.12173. (The ACM listing puts Abdelnabi first.)
+7. OWASP. LLM01:2025 Prompt Injection. OWASP Top 10 for LLM Applications 2025. https://genai.owasp.org/llmrisk/llm01-prompt-injection/
 8. M'Raihi, D. et al. RFC 6238: TOTP: Time-Based One-Time Password Algorithm. IETF, 2011.
 9. Josefsson, S. and Liusvaara, I. RFC 8032: Edwards-Curve Digital Signature Algorithm (EdDSA). IETF, 2017.
 10. Rescorla, E. RFC 8446: The Transport Layer Security (TLS) Protocol Version 1.3. IETF, 2018.
 11. Neuman, C. et al. RFC 4120: The Kerberos Network Authentication Service (V5). IETF, 2005.
-12. Needham, R. and Schroeder, M. Using encryption for authentication in large networks of computers. Communications of the ACM, 1978.
-13. Lowe, G. Breaking and fixing the Needham-Schroeder public-key protocol using FDR. TACAS, 1996. [VERIFY]
-14. Hardy, N. The Confused Deputy. ACM SIGOPS Operating Systems Review, 1988.
-15. Wilson, E. B. Probable inference, the law of succession, and statistical inference. JASA, 1927.
-16. Newcombe, R. G. Interval estimation for the difference between independent proportions. Statistics in Medicine, 1998.
-17. Holm, S. A simple sequentially rejective multiple test procedure. Scandinavian Journal of Statistics, 1979.
+12. Needham, R. and Schroeder, M. Using encryption for authentication in large networks of computers. Communications of the ACM, 21(12), 1978.
+13. Lowe, G. Breaking and fixing the Needham-Schroeder public-key protocol using FDR. In Tools and Algorithms for the Construction and Analysis of Systems (TACAS 1996), LNCS 1055, pp. 147–166. Springer, 1996. doi:10.1007/3-540-61042-1_43.
+14. Hardy, N. The Confused Deputy (or why capabilities might have been invented). ACM SIGOPS Operating Systems Review, 22(4), 1988.
+15. Wilson, E. B. Probable inference, the law of succession, and statistical inference. Journal of the American Statistical Association, 22(158), 1927.
+16. Newcombe, R. G. Interval estimation for the difference between independent proportions: comparison of eleven methods. Statistics in Medicine, 17(8), 1998.
+17. Holm, S. A simple sequentially rejective multiple test procedure. Scandinavian Journal of Statistics, 6(2), 1979.
 """
 
 
@@ -559,6 +615,36 @@ def build_handoff() -> None:
     print(f"handoff built in {h}")
 
 
+README_START = "<!-- results:start"
+README_END = "<!-- results:end -->"
+
+
+def readme_results(c: Ctx) -> str:
+    """The README's "Results at a glance" block: every number comes from values.json or a generated table."""
+    lines = [f"**Headline.** {headline(c)}", "",
+             f"Attack success per defence and attack, family 1 ({c.v('model.family1')}), 30 trials per cell "
+             "(successes/trials; A5 pools its three variants):", "", c.table("table2b_headline_matrix"), ""]
+    f2 = [(d, f"headline.f2.A5pooled.{d}") for d in ("D0", "D1", "D2", "D3") if c.has(f"headline.f2.A5pooled.{d}")]
+    if f2:
+        lines += [f"Prompt injection (A5) with family 2 ({c.v('model.family2')}), three variants pooled: "
+                  + ", ".join(f"{d} {c.v(k)}" for d, k in f2) + ".", ""]
+    if (c.root / "figures" / "fig2_asr_heatmap.png").exists():
+        lines += ["![Attack success rate by defence and attack, family 1](figures/fig2_asr_heatmap.png)", ""]
+    return "\n".join(lines)
+
+
+def update_readme(c: Ctx) -> None:
+    p = ROOT / "README.md"
+    if not p.exists():
+        return
+    text = p.read_text(encoding="utf-8")
+    i, j = text.find(README_START), text.find(README_END)
+    if i < 0 or j < i:
+        return
+    i = text.index("\n", i) + 1  # keep the start-marker line itself
+    p.write_text(text[:i] + "\n" + readme_results(c).strip() + "\n\n" + text[j:], encoding="utf-8")
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default=str(ROOT))
@@ -577,6 +663,7 @@ def main(argv=None) -> int:
     write_docs(c, docs)
     if c.out == ROOT / "report":
         write_examples()
+        update_readme(c)
     if args.handoff:
         build_handoff()
     print(f"report written to {c.out} (excerpts: {len(chosen)})")

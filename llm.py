@@ -9,7 +9,6 @@ returns HTTP 400 for them, and the installed anthropic SDK no longer accepts the
 from __future__ import annotations
 
 import json
-import os
 import re
 import threading
 import time

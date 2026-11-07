@@ -39,8 +39,8 @@ The experiment is finished. Every result, table, figure and log excerpt already 
 
 | Input | Your answer | Notes |
 | --- | --- | --- |
-| Author name(s), in order | | |
-| Affiliation(s) | | The plan suggests "University of Bristol, EPSRC CDT in Cyber Security". Write it here only if it is correct. |
+| Author name(s), in order | Bryan Uzoatu | |
+| Affiliation(s) | PhD Researcher in Cyber Security, University of Bristol | |
 | Contact email for the paper (optional) | | |
 | Sprint dates | | For example "6–9 November 2026". |
 | Track | Track 3: Strengthening Agent Infrastructure | Taken from the plan. Correct it if it is wrong. |
@@ -49,8 +49,8 @@ The experiment is finished. Every result, table, figure and log excerpt already 
 | Anything to leave out of the public version | | |
 | Submission template or format, if the sprint gave one | | For example a Google Docs or LaTeX template, or "PDF, 8 pages". |
 | Page or word limit | | Default from the plan: 8 pages of main text (about 4,500 words); appendices extra. |
-| Repository URL (once public) | | |
-| Licence | | Suggested: MIT for code, CC-BY-4.0 for data and figures. |
+| Repository URL (once public) | https://github.com/U-Bryan/sign-countersign | Check that the link opens before you submit. |
+| Licence | MIT for the code; CC BY 4.0 for the data, figures and documents | See `LICENSE` and `LICENSE-DATA.md`. |
 | Acknowledgements (optional) | | |
 
 **Claude:** use these answers exactly. Where a cell is empty, write `[TO FILL: <input name>]` in the paper and list it in `PAPER_QA.md`. Never invent a name, affiliation, date, link, licence or personal story.
@@ -81,7 +81,7 @@ If the motivation cell is empty, write a short neutral version of the analogy an
 | `03_DESIGN_AND_METHODS.md` | `PREREGISTRATION.md`; `docs/THREAT_MODEL.md`; `docs/CONFIG_TABLE.md`; `RUNBOOK.md` sections 3.2–3.6, 5.1 and 6.7–6.9; `docs/HONEST_TASKS.md`; `prompts/*.txt`; `attack_texts/*`; `docs/MODEL_CHECK.md`; `config/experiment.toml`; `results/run_manifest.json`; `results/registry_example.json`; `results/totp_setup_redacted.json` | The pre-registration (hypotheses, success rules, predicted oracle matrix, analysis plan, verdict rules); the threat model; the configuration of every defence; the exact protocol and attack procedures; the honest tasks and invoices; the verbatim prompts and injection texts; the model, environment and run details. | Section 3 of the paper; Appendices B and C. |
 | `04_VALIDATION_AND_PROVENANCE.md` | `docs/PILOT_BUGS.md`; `docs/PILOT_AUDIT.md`; `docs/DEVIATIONS.md`; `docs/FALSE_REJECTIONS.md`; `docs/COST_ACTUAL.md`; summaries of `tables/audit_agreement*.csv`; `PROGRESS.md`; the README's "Reproduce" section | Bugs found and fixed; the pilot log audit; every deviation from the plan (V1–V10) with its reason; false rejections (none); API cost; independent-audit agreement; the project log, including the A5 escalation ladder tried in the pilot; how to reproduce. | Validation, deviations, cost and reproducibility (Sections 3 and 4; Appendices F and G). |
 | `05_LOG_EXCERPTS.md` | `report/excerpts/*.md` | Five message-by-message traces from real trials: Box 1 (A5 success under D2, family 2); A3 under D1; a monitor block (A5 under D3, family 2); A1-reflect under D1; A4-lie under D2. | Box 1, worked examples, Appendix H. |
-| `06_DRAFT_AND_APPENDIX_SOURCES.md` | `report/paper_draft.md`; `report/references.md`; `docs/LIMITATIONS.md`; `docs/DUAL_USE.md`; `docs/A2A_MINIMUM_IDENTITY_CHECKLIST.md`; `README.md` | The generated paper skeleton; the reference list (with `[VERIFY]` marks); limitations; the dual-use statement; the reusable checklist artefact; the README. | Structure; Appendices A and D; references. |
+| `06_DRAFT_AND_APPENDIX_SOURCES.md` | `report/paper_draft.md`; `report/references.md`; `docs/LIMITATIONS.md`; `docs/DUAL_USE.md`; `docs/A2A_MINIMUM_IDENTITY_CHECKLIST.md`; `README.md` | The generated paper skeleton; the reference list (entries 1–7 and 13 checked against their sources on 7 November 2026); limitations; the dual-use statement; the reusable checklist artefact; the README. | Structure; Appendices A and D; references. |
 | `07_FIGURES.pdf` | `figures/*.png` | All 16 figures, one per page, each with its file name and caption. | Look at every figure before you cite it. |
 | `08_SOURCE_PLAN.md` | not in the repository (`handoff/SOURCE_PLAN.md`, kept local) | The original sprint plan: the research question, the 4 × 5 matrix, the report checklist (Part 2), what judges reward, and the write-up plan. | The requirements (summarised in Section 5). |
 | `figures/` folder | `figures/*.png` (and `.svg`) | The same 16 figures as image files. | Embedding in the paper. Chat users don't need to upload these. |
@@ -375,7 +375,7 @@ No citations. Give k/n with intervals for the key numbers.
 ### 8.3 Introduction (about 450 words)
 
 1. Open with the human's motivation paragraph (Section 1). The point of the analogy: a countersign proves that you know the password, not that you are loyal. The same is true of cryptographic identity for agents.
-2. The context: agents increasingly act on each other's messages over protocols such as A2A [VERIFY]. Proposals for agent identity rest on keys and credentials, while prompt injection lets content carry instructions.
+2. The context: agents increasingly act on each other's messages over protocols such as A2A. Proposals for agent identity rest on keys and credentials, while prompt injection lets content carry instructions.
 3. The research question, verbatim from the plan.
 4. What was done, in two sentences.
 5. The contributions, as a short list:
@@ -448,7 +448,7 @@ One consistent style: numbered or author–year. Use `report/references.md` plus
 - **A. Limitations and dual use.** The full limitations (from `docs/LIMITATIONS.md`, with anything you found while writing added; replace its `[TO FILL]` line). Then the dual-use statement (5.4).
 - **B. Prompts and inputs.** The three system prompts verbatim; the 10 honest tasks and the invoice table; the three A5 templates verbatim.
 - **C. Configuration and rules.** The configuration table; the success rules verbatim (PREREGISTRATION section 7); the registry example (public keys only) and the redacted TOTP setup; model and environment details.
-- **D. Minimum identity checklist for A2A deployments.** From `docs/A2A_MINIMUM_IDENTITY_CHECKLIST.md`. Keep each A2A mapping marked `[VERIFY]` unless you checked it against the current A2A specification.
+- **D. Minimum identity checklist for A2A deployments.** From `docs/A2A_MINIMUM_IDENTITY_CHECKLIST.md`. Its A2A column was checked against the A2A specification v1.0.0 on 7 November 2026; keep the version and date with it.
 - **E. Full results.** The full matrix with Wilson intervals (Table 2); the significance tests (Table 3); family 2 (Tables 2c, 3b, 4b); the ablations (Table 2d); attribution (Tables 5 and 6); the funnels (Tables 11 and 11b); the variants and the family comparison (Tables 7, 7b, 8); oracle vs LLM (Table 12); E1–E3 summarised and E5–E6; and the appendix figures.
 - **F. Validation.** The pilot bugs (one line each); a summary of the pilot log audit; the audit agreement; the oracle check; the deviations V1–V10 as a table (plan / what was done / why); the escalation ladder.
 - **G. Reproducibility.** The repository; the one-command reproduction and its modes; the environment; run dates; trial counts; cost; seeds; the provenance hashes from the end of `01_RESULTS.md`; the licence.
@@ -539,7 +539,7 @@ Read these twice. Each one is an easy mistake with these particular results.
 20. **Describe the study as run** (deviations): no temperature setting (V1); attacker account `GB-KSTR-417` (V2); records serves bank details and only the monitor checks the invoice on file (V3); A2 delays of +10 s and +300 s on a simulated clock (V4, V5); A1-reflect and A4-lie added (V6, V7); the pilot archived rather than deleted (V8); supplier and amount in the task text (V9); a rotating target invoice (V10).
 21. **Model names.** Use the versions the APIs returned: `claude-haiku-5-5` and `gpt-5-mini-2025-08-07`. The request asked for `gpt-5-mini`.
 22. **Don't say "TOTP is broken".** TOTP did its job (A1-guess 0/30). The flaws are in how the proposed handshake uses it: the same code in both directions, nothing bound to the request, no per-message protection, and one shared secret.
-23. **The A2A protocol itself was not tested.** The messages are A2A-shaped. Mappings to A2A features stay `[VERIFY]` unless you checked the current specification.
+23. **The A2A protocol itself was not tested.** The messages are A2A-shaped. The checklist's A2A column describes A2A v1.0.0 as read on 7 November 2026. It notes that v1.0.0 requires TLS on every hop but specifies no per-message signatures, replay protection or treatment of other agents' content as untrusted. Say "as of v1.0.0" when you use it.
 24. **"60/60" for A1 pools A1-guess and A1-reflect.** Say so wherever you use it.
 25. **The core matrix (Figure 2, Table 2) is family 1.** Family 2 covered only the A5 columns and the honest runs.
 26. **The seed formula.** A comment in `config/experiment.toml` gives an older seed formula. The rule actually used is the pre-registered one in PREREGISTRATION section 6, with a fixed offset per experiment.
@@ -607,7 +607,7 @@ Read these twice. Each one is an easy mistake with these particular results.
 - [ ] The ablations are reported and interpreted (the role of R1).
 - [ ] There is a limitations paragraph in the Discussion and the full list in Appendix A, including that E7 and E8 were not run.
 - [ ] The dual-use appendix covers every point in 5.4.
-- [ ] The checklist artefact is in Appendix D, with A2A mappings marked `[VERIFY]` unless checked.
+- [ ] The checklist artefact is in Appendix D, with its A2A version (v1.0.0) and check date.
 - [ ] The prompts, honest tasks and A5 texts are verbatim in Appendix B, and the success rules verbatim in Appendix C.
 - [ ] The deviations V1–V10 are summarised in Appendix F and referred to from Section 3.
 - [ ] The pilot bugs, the 100% audit agreement, the oracle check and the reproducibility statement (commands and provenance) are all present.

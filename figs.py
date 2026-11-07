@@ -90,7 +90,6 @@ def heatmap(ax, cells: dict, rows: list[str], cols: list[str], title: str = "", 
     ax.grid(which="minor", color=SURFACE, linewidth=2)
     ax.tick_params(which="minor", length=0)
     # group headers above the columns
-    start = 0
     for name, cs in GROUPS:
         present = [c for c in cs if c in cols]
         if not present:
@@ -99,7 +98,6 @@ def heatmap(ax, cells: dict, rows: list[str], cols: list[str], title: str = "", 
         ax.annotate(name, xy=((j0 + j1) / 2, -0.62), xycoords="data", ha="center", va="bottom", fontsize=7.5,
                     color=INK2, annotation_clip=False)
         ax.plot([j0 - 0.42, j1 + 0.42], [-0.58, -0.58], color=BASELINE, lw=0.8, clip_on=False)
-        start = j1 + 1
     if title:
         ax.set_title(title, loc="left", pad=22, color=INK)
 

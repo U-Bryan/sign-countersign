@@ -2,7 +2,7 @@
 
 _Generated skeleton: `make_report.py` overwrites this file on every run. Write the final paper in `report/PAPER.md`; the instructions are in `REPORT_BRIEF.md`._
 
-[TO FILL: authors] · [TO FILL: affiliation, e.g. University of Bristol, EPSRC CDT in Cyber Security] · Swarm Alignment Sprint, Track 3 (Strengthening Agent Infrastructure), [TO FILL: sprint dates]
+Bryan Uzoatu · PhD Researcher in Cyber Security, University of Bristol · Swarm Alignment Sprint, Track 3 (Strengthening Agent Infrastructure), [TO FILL: sprint dates]
 
 ## Abstract (write last; claim no more than Table 10 supports)
 
@@ -10,11 +10,11 @@ _Generated skeleton: `make_report.py` overwrites this file on every run. Write t
 
 ## 1 Introduction (0.75 page)
 
-[TO FILL: motivation in your own words: the soldier and countersign story.] Agent-to-agent protocols such as A2A [VERIFY] let agents act on each other's messages. We ask which attacks on that messaging each layer of identity defence stops, and which get past every cryptographic layer. Contributions: (1) a ground-truth testbed where success is read from a ledger, not from model text; (2) a 4 × 10 attack matrix with pre-registered success rules and 30 trials per cell; (3) a protocol-level oracle that separates what each protocol lets through from what the models resist; (4) a reusable attack suite and a minimum identity checklist for A2A deployments.
+[TO FILL: motivation in your own words: the soldier and countersign story.] Agent-to-agent protocols such as A2A let agents act on each other's messages. We ask which attacks on that messaging each layer of identity defence stops, and which get past every cryptographic layer. Contributions: (1) a ground-truth testbed where success is read from a ledger, not from model text; (2) a 4 × 10 attack matrix with pre-registered success rules and 30 trials per cell; (3) a protocol-level oracle that separates what each protocol lets through from what the models resist; (4) a reusable attack suite and a minimum identity checklist for A2A deployments.
 
 ## 2 Related work (0.5 page)
 
-Agent identity (Chan et al., IDs for AI Systems [VERIFY]); prompt injection between agents (Lee & Tiwari, Prompt Infection [VERIFY]; Greshake et al. [VERIFY]); AI control (Greenblatt et al. [VERIFY]); CaMeL-style system security (Debenedetti et al. [VERIFY]). Security protocols: TOTP (RFC 6238), Ed25519 (RFC 8032), TLS 1.3 (RFC 8446), Kerberos (RFC 4120), the Needham–Schroeder relay flaw (Lowe, 1996 [VERIFY]), reflection attacks on symmetric challenge–response, and the confused deputy (Hardy, 1988). [TO FILL: 3–4 sentences positioning the work.]
+Agent identity (Chan et al., IDs for AI Systems); prompt injection between agents (Lee & Tiwari, Prompt Infection; Greshake et al.); AI control (Greenblatt et al.); CaMeL-style system security (Debenedetti et al.). Security protocols: TOTP (RFC 6238), Ed25519 (RFC 8032), TLS 1.3 (RFC 8446), Kerberos (RFC 4120), the Needham–Schroeder relay flaw (Lowe, 1996), reflection attacks on symmetric challenge–response, and the confused deputy (Hardy, 1988). [TO FILL: 3–4 sentences positioning the work.]
 
 ## 3 Threat model and setup (1.5 pages)
 

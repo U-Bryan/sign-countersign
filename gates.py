@@ -4,11 +4,9 @@ Prints one line per check and then "GATE <n> PASS" or "GATE <n> FAIL". Exit code
 """
 from __future__ import annotations
 
-import csv
 import json
 import os
 import re
-import shutil
 import subprocess
 import sys
 from pathlib import Path

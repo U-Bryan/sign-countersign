@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this code or data, please cite it as below."
+type: software
+title: "Sign and Countersign: Cryptographic Identity Is Necessary but Not Sufficient for Agent Swarms"
+abstract: >-
+  A pre-registered testbed that measures which attacks on agent-to-agent messaging
+  each layer of identity defence stops (no defence, a shared TOTP handshake,
+  per-agent Ed25519 signatures, and signatures plus an external reference monitor),
+  with attack success read from a fake payment ledger. Swarm Alignment Sprint,
+  Track 3 (Strengthening Agent Infrastructure).
+authors:
+  - family-names: Uzoatu
+    given-names: Bryan
+    affiliation: "University of Bristol"
+repository-code: "https://github.com/U-Bryan/sign-countersign"
+license: MIT
+date-released: "2026-11-07"
+keywords:
+  - AI safety
+  - multi-agent systems
+  - agent-to-agent protocols
+  - prompt injection
+  - authentication
+  - reference monitor
