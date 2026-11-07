@@ -357,6 +357,15 @@ Honest-run costs, family 2:
 
 *Figure 2b. Monitor without crypto, monitor without R1, and the fixed handshake.*
 
+<!--table:table2d_ablation_matrix-->
+| defence   | A1g                 | A1r                 | A2f                      | A2s                 | A3                       | A4d                 | A4l                      | A5b                 | A5p                 | A5d                 | A5*                 |
+|:----------|:--------------------|:--------------------|:-------------------------|:--------------------|:-------------------------|:--------------------|:-------------------------|:--------------------|:--------------------|:--------------------|:--------------------|
+| D1fix     | not run             | 0/30 = 0% [0%, 11%] | 30/30 = 100% [89%, 100%] | 0/30 = 0% [0%, 11%] | not run                  | not run             | not run                  | not run             | not run             | not run             | not run             |
+| D0+M      | 0/30 = 0% [0%, 11%] | 0/30 = 0% [0%, 11%] | 0/30 = 0% [0%, 11%]      | 0/30 = 0% [0%, 11%] | 0/30 = 0% [0%, 11%]      | 0/30 = 0% [0%, 11%] | 0/30 = 0% [0%, 11%]      | 0/30 = 0% [0%, 11%] | 0/30 = 0% [0%, 11%] | 0/30 = 0% [0%, 11%] | 0/90 = 0% [0%, 4%]  |
+| D3-R1     | not run             | 0/30 = 0% [0%, 11%] | not run                  | not run             | 0/30 = 0% [0%, 11%]      | not run             | 30/30 = 100% [89%, 100%] | 0/30 = 0% [0%, 11%] | not run             | not run             | 0/30 = 0% [0%, 11%] |
+| D0+M-R1   | not run             | 0/30 = 0% [0%, 11%] | not run                  | not run             | 30/30 = 100% [89%, 100%] | not run             | 30/30 = 100% [89%, 100%] | 0/30 = 0% [0%, 11%] | not run             | not run             | 0/30 = 0% [0%, 11%] |
+<!--/table-->
+
 ![Figure E1. Replay acceptance vs delay.](../figures/figE1_replay_delay.png)
 
 *Figure E1. Replay acceptance vs delay.*
@@ -414,6 +423,59 @@ Honest-run costs, family 2:
 ![Figure E2. False rejections vs clock skew.](../figures/figE2_skew_frr.png)
 
 *Figure E2. False rejections vs clock skew.*
+
+<!--table:tableE2_skew_frr-->
+| defence   | parameter      |   skew_span_s |   frr |
+|:----------|:---------------|--------------:|------:|
+| D1        | valid_window=0 |             0 | 0     |
+| D1        | valid_window=0 |             5 | 0.102 |
+| D1        | valid_window=0 |            10 | 0.23  |
+| D1        | valid_window=0 |            20 | 0.432 |
+| D1        | valid_window=0 |            30 | 0.562 |
+| D1        | valid_window=0 |            45 | 0.698 |
+| D1        | valid_window=0 |            60 | 0.778 |
+| D1        | valid_window=0 |            90 | 0.83  |
+| D1        | valid_window=1 |             0 | 0     |
+| D1        | valid_window=1 |             5 | 0     |
+| D1        | valid_window=1 |            10 | 0     |
+| D1        | valid_window=1 |            20 | 0.008 |
+| D1        | valid_window=1 |            30 | 0.088 |
+| D1        | valid_window=1 |            45 | 0.224 |
+| D1        | valid_window=1 |            60 | 0.378 |
+| D1        | valid_window=1 |            90 | 0.592 |
+| D1        | valid_window=2 |             0 | 0     |
+| D1        | valid_window=2 |             5 | 0     |
+| D1        | valid_window=2 |            10 | 0     |
+| D1        | valid_window=2 |            20 | 0     |
+| D1        | valid_window=2 |            30 | 0     |
+| D1        | valid_window=2 |            45 | 0.02  |
+| D1        | valid_window=2 |            60 | 0.152 |
+| D1        | valid_window=2 |            90 | 0.336 |
+| D2        | window=30s     |             0 | 0     |
+| D2        | window=30s     |             5 | 0     |
+| D2        | window=30s     |            10 | 0     |
+| D2        | window=30s     |            20 | 0.076 |
+| D2        | window=30s     |            30 | 0.278 |
+| D2        | window=30s     |            45 | 0.416 |
+| D2        | window=30s     |            60 | 0.524 |
+| D2        | window=30s     |            90 | 0.688 |
+| D2        | window=60s     |             0 | 0     |
+| D2        | window=60s     |             5 | 0     |
+| D2        | window=60s     |            10 | 0     |
+| D2        | window=60s     |            20 | 0     |
+| D2        | window=60s     |            30 | 0     |
+| D2        | window=60s     |            45 | 0.112 |
+| D2        | window=60s     |            60 | 0.246 |
+| D2        | window=60s     |            90 | 0.444 |
+| D2        | window=120s    |             0 | 0     |
+| D2        | window=120s    |             5 | 0     |
+| D2        | window=120s    |            10 | 0     |
+| D2        | window=120s    |            20 | 0     |
+| D2        | window=120s    |            30 | 0     |
+| D2        | window=120s    |            45 | 0     |
+| D2        | window=120s    |            60 | 0     |
+| D2        | window=120s    |            90 | 0.122 |
+<!--/table-->
 
 ![Figure E3. Brute force against the 6-digit handshake.](../figures/figE3_bruteforce.png)
 
@@ -581,4 +643,4 @@ Honest-run costs, family 2:
 - git commit: `459bc7ca3490d13c78cfe1555f72f2148cb7ebec`
 - config SHA-256: `ba1c174564978c425a46c9c7ba2406c4983221ec92ed84f8b87a0dc70926d1c4`
 - prompt SHA-256: `35b2e5c8cf18fffb598a78f847bf67ff20355bb0fa62fedc3d8239080da3a420`
-- generated: 2026-11-07T07:10:24+00:00
+- generated: 2026-11-07T07:21:21+00:00

@@ -382,6 +382,25 @@ def analyse(df_all: pd.DataFrame, phase: str, out_root: Path, cfg, make_figures:
         if rows:
             write_table(pd.DataFrame(rows), f"tableE_{lab}", tables)
 
+    # Ablations and E4 (family 1): ASR per cell with Wilson intervals (the numbers behind fig2b) ---------------------
+    if abl_cells:
+        abl_rows = []
+        for dfn in ("D1fix", "D0+M", "D3-R1", "D0+M-R1"):
+            row = {"defence": dfn}
+            for c in COLS + ["A5*"]:
+                if (dfn, c) not in abl_cells:
+                    row[c] = "not run"
+                    continue
+                k, n = abl_cells[(dfn, c)]
+                lo, hi = st.wilson(k, n)
+                row[c] = st.fmt_asr(k, n)
+                for key, val in (("k", k), ("n", n), ("p", k / n), ("lo", lo), ("hi", hi), ("fmt", st.fmt_asr(k, n))):
+                    V.put(f"asr.ablation.{dfn}.{c}.{key}", val)
+            if any(row[c] != "not run" for c in COLS):
+                abl_rows.append(row)
+        if abl_rows:
+            write_table(pd.DataFrame(abl_rows), "table2d_ablation_matrix", tables)
+
     # Headline values ----------------------------------------------------------------------------------------------------
     def pooled(dfn, codes):
         ks = [cells[(dfn, c)] for c in codes if (dfn, c) in cells]

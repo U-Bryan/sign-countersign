@@ -301,8 +301,9 @@ def results_md(c: Ctx, chosen: dict) -> str:
         "## Protocol level vs model level", "", c.fig("fig9_oracle_vs_llm", "Figure 9. What each protocol lets through (top) vs what the LLM agents did (bottom)."), "",
         c.table("table12_model_resistance"), "",
         "## Ablations and extensions", "", c.fig("fig2b_ablation_heatmap", "Figure 2b. Monitor without crypto, monitor without R1, and the fixed handshake."), "",
+        c.table("table2d_ablation_matrix"), "",
         c.fig("figE1_replay_delay", "Figure E1. Replay acceptance vs delay."), "", c.table("tableE1_replay_delay"), "",
-        c.fig("figE2_skew_frr", "Figure E2. False rejections vs clock skew."), "",
+        c.fig("figE2_skew_frr", "Figure E2. False rejections vs clock skew."), "", c.table("tableE2_skew_frr"), "",
         c.fig("figE3_bruteforce", "Figure E3. Brute force against the 6-digit handshake."), "", c.table("tableE3_bruteforce"), "",
         c.table("tableE_salient"), "", c.table("tableE_effort-low"), "", c.table("tableE_effort-high"), "",
         "## Log excerpts", "",
@@ -496,8 +497,10 @@ def write_docs(c: Ctx, docs: Path) -> None:
 def write_examples() -> None:
     import registry
     from message import AGENTS
-    _, reg = registry.generate(AGENTS)
-    registry.export_registry(reg, ROOT / "results" / "registry_example.json")
+    reg_path = ROOT / "results" / "registry_example.json"
+    if not reg_path.exists():  # example public keys only; keep the committed example stable across reruns
+        _, reg = registry.generate(AGENTS)
+        registry.export_registry(reg, reg_path)
     cfg = load_config()
     (ROOT / "results" / "totp_setup_redacted.json").write_text(json.dumps({
         "digits": cfg.d1.totp_digits, "period_s": cfg.d1.totp_period_s, "valid_window": cfg.d1.valid_window,
